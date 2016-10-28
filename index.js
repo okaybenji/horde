@@ -1,7 +1,34 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
-ctx.canvas.width = 256;
-ctx.canvas.height = 224;
+ctx.canvas.width = 320;
+ctx.canvas.height = 180;
+
+// adapted from underscore
+const debounce = (func, wait, immediate) => {
+  let timeout;
+  return function() {
+    const context = this;
+    const args = arguments;
+    const later = () => {
+      timeout = null;
+      if (!immediate) {
+        func.apply(context, args);
+      }
+    };
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) {
+      func.apply(context, args);
+    }
+  };
+};
+
+const resize = () => {
+  document.body.style.zoom = window.innerWidth / ctx.canvas.width;
+};
+resize();
+window.onresize = debounce(resize, 100);
 
 const arena = new Image();
 arena.src = './assets/images/arena.png';
@@ -23,8 +50,8 @@ const moveEntityBy = ({ entity, x = 0, y = 0 }) => {
 };
 
 let player = createEntity({
-  x: 20,
-  y: 20,
+  x: 152,
+  y: 82,
   src: './assets/images/player/walk/s.png'
 });
 
@@ -96,7 +123,7 @@ const loop = () => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   // draw bg
-  ctx.drawImage(arena, -80, -156);
+  ctx.drawImage(arena, -48, -146);
 
   // update player
   for (const dir in input) {
