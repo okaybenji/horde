@@ -33,11 +33,11 @@ window.onresize = debounce(resize, 100);
 const arena = new Image();
 arena.src = './assets/images/arena.png';
 
-const createEntity = ({x = 0, y = 0, src }) => {
+const createEntity = ({x = 0, y = 0, sprite }) => {
   const img = new Image();
-  img.src = src;
+  img.src = sprite.src;
 
-  return { x, y, img };
+  return { x, y, sprite, img };
 };
 
 const moveEntityBy = ({ entity, x = 0, y = 0 }) => {
@@ -52,7 +52,13 @@ const moveEntityBy = ({ entity, x = 0, y = 0 }) => {
 let player = createEntity({
   x: 152,
   y: 82,
-  src: './assets/images/player/walk/s.png'
+  sprite: {
+    src: './assets/images/player/walk/s.png',
+    x: 0,
+    y: 0,
+    width: 13,
+    height: 16
+  }
 });
 
 player.move = (dir) => {
@@ -133,7 +139,7 @@ const loop = () => {
   }
 
   // draw player
-  ctx.drawImage(player.img, player.x, player.y);
+  ctx.drawImage(player.img, player.sprite.x, player.sprite.y, player.sprite.width, player.sprite.height, player.x, player.y, player.sprite.width, player.sprite.height);
 
   // loop
   requestAnimationFrame(loop);
