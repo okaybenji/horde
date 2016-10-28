@@ -6,43 +6,27 @@ ctx.canvas.height = 224;
 const arena = new Image();
 arena.src = './assets/images/arena.png';
 
-const createEntity = (options) => {
-  const x = options.x || 0;
-  const y = options.y || 0;
+const createEntity = ({x = 0, y = 0, src }) => {
   const img = new Image();
-  img.src = options.img;
+  img.src = src;
 
   return { x, y, img };
 };
 
-const moveEntityBy = (options) => {
-  const x = options.entity.x + (options.x || 0);
-  const y = options.entity.y + (options.y || 0);
-  const newEntity = Object.assign({}, options.entity, {x, y});
+const moveEntityBy = ({ entity, x = 0, y = 0 }) => {
+  const newEntity = Object.assign({}, entity, {
+    x: entity.x + x,
+    y: entity.y + y
+  });
 
-  console.log('new player:', newEntity);
   return newEntity;
 };
 
-const createPlayer = (options) => {
-  const entity = createEntity({
-    x: options.x,
-    y: options.y,
-    img: './assets/images/player/walk/s.png'
-  });
-
-  // this isn't going to work because the player it returns
-  // won't have a moveBy method!
-  const player = Object.assign({}, entity, {
-    moveBy({x, y}) {
-      return moveEntityBy({ entity, x, y });
-    }
-  });
-
-  return player;
-};
-
-let player = createPlayer({x: 20, y: 20});
+let player = createEntity({
+  x: 20,
+  y: 20,
+  src: './assets/images/player/walk/s.png'
+});
 
 const loop = () => {
   // clear canvas
