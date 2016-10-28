@@ -28,6 +28,21 @@ let player = createEntity({
   src: './assets/images/player/walk/s.png'
 });
 
+player.move = (dir) => {
+  const movePlayer = ({x = 0, y = 0}) => {
+    return moveEntityBy({entity: player, x, y})
+  };
+  const vel = 1;
+  const directions = {
+    n: () => movePlayer({y: -vel}),
+    s: () => movePlayer({y: vel}),
+    e: () => movePlayer({x: vel}),
+    w: () => movePlayer({x: -vel})
+  };
+
+  return directions[dir]();
+};
+
 const loop = () => {
   // clear canvas
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
