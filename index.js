@@ -24,6 +24,7 @@ const debounce = (func, wait, immediate) => {
   };
 };
 
+// Number -> Array
 const createArray = (length) => Array.apply(null, Array(length));
 
 const resize = () => {
@@ -32,13 +33,7 @@ const resize = () => {
 resize();
 window.onresize = debounce(resize, 100);
 
-const drawEntity = (entity) => {
-  ctx.drawImage(entity.animation.image, entity.sprite.x, entity.sprite.y, entity.sprite.width, entity.sprite.height, entity.x, entity.y, entity.sprite.width, entity.sprite.height);
-};
-
-const arena = new Image();
-arena.src = './assets/images/arena.png';
-
+// Object -> Entity
 const createEntity = ({x = 0, y = 0, animation }) => {
   const sprite = Object.assign({}, animation.frames[0], {
     frame: 0,
@@ -47,6 +42,11 @@ const createEntity = ({x = 0, y = 0, animation }) => {
   return { x, y, sprite, animation};
 };
 
+const drawEntity = (entity) => {
+  ctx.drawImage(entity.animation.image, entity.sprite.x, entity.sprite.y, entity.sprite.width, entity.sprite.height, entity.x, entity.y, entity.sprite.width, entity.sprite.height);
+};
+
+// Entity -> Entity
 const moveEntityBy = ({ entity, x = 0, y = 0 }) => {
   const newEntity = Object.assign({}, entity, {
     x: entity.x + x,
@@ -56,6 +56,7 @@ const moveEntityBy = ({ entity, x = 0, y = 0 }) => {
   return newEntity;
 };
 
+// Object -> Animation
 const createAnimation = ({ image, frameCount }) => {
   // assumes image contains single row of equally-spaced cells
   if (image.width % frameCount !== 0) {
@@ -75,6 +76,7 @@ const createAnimation = ({ image, frameCount }) => {
   return {image, frames};
 };
 
+// Sprite -> Sprite
 const animateSprite = ({ sprite, animation, fps = 12, now }) => {
   if (sprite.isPaused) {
     return sprite;
@@ -139,13 +141,18 @@ assets.forEach((asset) => {
   animations[asset.entity][asset.name] = createAnimation({image, frameCount: asset.frameCount});
 });
 
+const arena = new Image();
+arena.src = './assets/images/arena.png';
+
 let player = createEntity({
   x: 152,
   y: 82,
   animation: animations.player.walk_s
 });
 
+// String -> Entity
 player.move = (dir) => {
+  // Position -> Entity
   const movePlayer = ({x = 0, y = 0}) => {
     return moveEntityBy({entity: player, x, y});
   };
@@ -170,7 +177,8 @@ let input = {
   atk: false
 };
 
-function updateInput(keyCode, val) {
+// Input, Number, Boolean -> Input
+function updateInput(input, keyCode, val) {
   const newInput = function(keyCode) {
     switch (keyCode) {
       // left
@@ -203,11 +211,11 @@ function updateInput(keyCode, val) {
 }
 
 document.addEventListener('keydown', (e) => {
-  input = updateInput(e.keyCode, true);
+  input = updateInput(input, e.keyCode, true);
 });
 
 document.addEventListener('keyup', (e) => {
-  input = updateInput(e.keyCode, false);
+  input = updateInput(input, e.keyCode, false);
 });
 
 // TODO: update loop to accept state object with arena, player, and input.
@@ -215,7 +223,6 @@ document.addEventListener('keyup', (e) => {
 // to requestAnimationFrame.
 // not sure how input would work with the event listeners, though...
 const loop = () => {
-
   // clear canvas
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
