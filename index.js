@@ -150,6 +150,8 @@ let player = createEntity({
   animation: animations.player.walk_s
 });
 
+player.dir = 's';
+
 // String -> Entity
 player.move = (dir) => {
   // Position -> Entity
@@ -166,6 +168,8 @@ player.move = (dir) => {
 
   let newPlayer = directions[dir](); // move player in directin
   newPlayer.animation = animations.player['walk_' + dir]; // update player animation
+  newPlayer.dir = dir;
+
   return newPlayer;
 };
 
@@ -231,10 +235,19 @@ const loop = () => {
 
   // update player
   let stopAnimating = true;
+
+  // String -> String -> Boolean
+  const isDirection = (dir) => {
+    return (direction) => direction === dir;
+  };
+
   for (const dir in input) {
     if (input[dir]) {
       stopAnimating = false;
-      player = player.move(dir);
+      const directions = ['n', 's', 'e', 'w'];
+      if (directions.find(isDirection(dir))) {
+        player = player.move(dir);
+      }
     }
   }
 
@@ -247,6 +260,11 @@ const loop = () => {
   // if all inputs are off/false, pause animation
   // NOTE: might regret this later when i try to animate actions like attack :P
   player.sprite.isPaused = stopAnimating;
+  // when animation ends, reset to default (walking) animation
+  // TODO: consider storing default animation on entity on creation
+  if (stopAnimating) {
+    player.animation = animations.player['walk_' + player.dir];
+  }
 
   drawEntity(player);
 
