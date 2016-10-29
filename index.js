@@ -35,12 +35,14 @@ window.onresize = debounce(resize, 100);
 const arena = new Image();
 arena.src = './assets/images/arena.png';
 
-// TODO: should i init entities with sprite frame of -1?
+// TODO: is there a way to set defaults for a nested object with destructuring?
 const createEntity = ({x = 0, y = 0, sprite }) => {
   const img = new Image();
   img.src = sprite.src;
 
-  return { x, y, sprite, img };
+  const fullSprite = Object.assign({ frame: -1, lastUpdated: window.performance.now() }, sprite);
+
+  return { x, y, sprite: fullSprite, img };
 };
 
 const moveEntityBy = ({ entity, x = 0, y = 0 }) => {
@@ -60,8 +62,7 @@ let player = createEntity({
     x: 0,
     y: 0,
     width: 13,
-    height: 16,
-    frame: 0
+    height: 16
   }
 });
 
@@ -80,41 +81,24 @@ const createAnimation = ({ image, cellWidth }) => {
       frame: i
     };
   });
-  const animation = {
-    frames,
-    lastUpdated: window.performance.now()
-  };
 
-  return animation;
+  return frames;
 };
 
-// TODO: ugh, this is really gross, and it shouldn't be.
-// the problem is related to trying to functionally track the
-// last time the animation frame changed and the fact that
-// Object.assign makes a shallow clone of an object.
-const animateEntity = ({ entity, animationName, fps = 12, now }) => {
-  const animation = entity.animations[animationName];
+const animateSprite = ({ sprite, animation, fps = 12, now }) => {
   const updateInterval = 1000 / fps;
-  if (now - animation.lastUpdated < updateInterval) {
-    return entity;
+  const delta = now - sprite.lastUpdated;
+  if (delta < updateInterval) {
+    return sprite;
   }
 
-  let frame = entity.sprite.frame + 1;
-  if (frame > animation.frames.length - 1) {
+  let frame = sprite.frame + 1;
+  if (frame > animation.length - 1) {
     frame = 0;
   }
 
-  const sprite = animation.frames[frame];
-
-  let animUpdate = {};
-  animUpdate[animationName] = {
-    frames: animation.frames
-  };
-  animUpdate[animationName].lastUpdated = now;
-  let animations = Object.assign({}, entity.animations, animUpdate);
-
-  const newEntity = Object.assign({}, entity, {sprite, animations});
-  return newEntity;
+  const newSprite = Object.assign({lastUpdated: now}, animation[frame]);
+  return newSprite;
 };
 
 player.move = (dir) => {
@@ -189,6 +173,7 @@ document.addEventListener('keyup', (e) => {
 // to requestAnimationFrame.
 // not sure how input would work with the event listeners, though...
 const loop = () => {
+
   // clear canvas
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -202,9 +187,9 @@ const loop = () => {
     }
   }
 
-  player = animateEntity({
-    entity: player,
-    animationName: 'walk',
+  player.sprite = animateSprite({
+    sprite: player.sprite,
+    animation: player.animations.walk,
     now: window.performance.now()
   });
 
