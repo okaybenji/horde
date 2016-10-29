@@ -178,7 +178,7 @@ let inputs = {
   s: false,
   e: false,
   w: false,
-  atk: false
+  shield: false
 };
 
 // Inputs, Number, Boolean -> Inputs
@@ -207,7 +207,7 @@ function updateInputs(inputs, keyCode, val) {
 
       // space bar;
       case 32:
-        return {atk: val};
+        return {shield: val};
     }
   };
 
@@ -247,6 +247,10 @@ const loop = () => {
       const directions = ['n', 's', 'e', 'w'];
       if (directions.find(equals(input))) {
         player = player.move(input);
+      }
+
+      if (input === 'shield') {
+        player.animation = animations.player['shield_' + player.dir];
       }
     }
   }
