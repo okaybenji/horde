@@ -76,7 +76,7 @@ const createAnimation = ({ image, frameCount }) => {
   return {image, frames};
 };
 
-// Sprite -> Sprite
+// Object -> Sprite
 const animateSprite = ({ sprite, animation, fps = 12, now }) => {
   if (sprite.isPaused) {
     return sprite;
@@ -144,6 +144,7 @@ assets.forEach((asset) => {
 const arena = new Image();
 arena.src = './assets/images/arena.png';
 
+// create a south-facing player entity
 let player = createEntity({
   x: 152,
   y: 82,
@@ -158,6 +159,7 @@ player.move = (dir) => {
   const movePlayer = ({x = 0, y = 0}) => {
     return moveEntityBy({entity: player, x, y});
   };
+  // TODO: velocity is currently framerate-dependent!
   const vel = 1;
   const directions = {
     n: () => movePlayer({y: -vel}),
@@ -166,7 +168,7 @@ player.move = (dir) => {
     w: () => movePlayer({x: -vel})
   };
 
-  let newPlayer = directions[dir](); // move player in directin
+  let newPlayer = directions[dir](); // move player in direction
   newPlayer.animation = animations.player['walk_' + dir]; // update player animation
   newPlayer.dir = dir;
 
@@ -183,7 +185,7 @@ let inputs = {
 
 // Inputs, Number, Boolean -> Inputs
 function updateInputs(inputs, keyCode, val) {
-  const newInputs = function(keyCode) {
+  const newInput = function(keyCode) {
     switch (keyCode) {
       // left
       case 65:
@@ -211,7 +213,7 @@ function updateInputs(inputs, keyCode, val) {
     }
   };
 
-  return Object.assign({}, inputs, newInputs(keyCode));
+  return Object.assign({}, inputs, newInput(keyCode));
 }
 
 document.addEventListener('keydown', (e) => {
@@ -228,6 +230,7 @@ document.addEventListener('keyup', (e) => {
 // not sure how inputs/player would work with the event listeners, though...
 const loop = () => {
   // clear canvas
+  // TODO: look into only redrawing parts of the screen which have changed
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   // draw bg
@@ -254,11 +257,9 @@ const loop = () => {
     if (inputs.shield) {
       player.animation = animations.player['shield_' + player.dir];
     } else {
-      ['n', 's', 'e', 'w'].forEach((dir) => {
-        if (inputs[dir]) {
-          player = player.move(dir);
-        }
-      });
+      ['n', 's', 'e', 'w']
+        .filter((dir) => inputs[dir]) // which inputs are active
+        .forEach((dir) => player = player.move(dir));
     }
   }
 
