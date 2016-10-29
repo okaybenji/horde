@@ -234,7 +234,7 @@ const loop = () => {
   ctx.drawImage(arena, -48, -146);
 
   // update player
-  let stopAnimating = true;
+  let noInputs = true;
 
   // a -> a -> Boolean
   const equals = (val) => {
@@ -243,19 +243,28 @@ const loop = () => {
 
   for (const input in inputs) {
     if (inputs[input]) {
-      stopAnimating = false;
+      noInputs = false;
     }
   }
 
-  // player cannot perform other actions while shield is up
-  if (inputs.shield) {
-    player.animation = animations.player['shield_' + player.dir];
+  // if all inputs are off/false, pause player animation
+  player.sprite.isPaused = noInputs;
+
+  if (noInputs) {
+    // reset to default animation
+    // TODO: consider storing default animation on entity on creation
+    player.animation = animations.player['walk_' + player.dir];
   } else {
-    ['n', 's', 'e', 'w'].forEach((dir) => {
-      if (inputs[dir]) {
-        player = player.move(dir);
-      }
-    });
+    // player cannot perform other actions while shield is up
+    if (inputs.shield) {
+      player.animation = animations.player['shield_' + player.dir];
+    } else {
+      ['n', 's', 'e', 'w'].forEach((dir) => {
+        if (inputs[dir]) {
+          player = player.move(dir);
+        }
+      });
+    }
   }
 
   player.sprite = animateSprite({
@@ -263,15 +272,6 @@ const loop = () => {
     animation: player.animation,
     now: window.performance.now()
   });
-
-  // if all inputs are off/false, pause animation
-  // NOTE: might regret this later when i try to animate actions like attack :P
-  player.sprite.isPaused = stopAnimating;
-  // when animation ends, reset to default (walking) animation
-  // TODO: consider storing default animation on entity on creation
-  if (stopAnimating) {
-    player.animation = animations.player['walk_' + player.dir];
-  }
 
   drawEntity(player);
 
