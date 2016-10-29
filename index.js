@@ -24,6 +24,8 @@ const debounce = (func, wait, immediate) => {
   };
 };
 
+const createArray = (length) => Array.apply(null, Array(length));
+
 const resize = () => {
   document.body.style.zoom = window.innerWidth / ctx.canvas.width;
 };
@@ -60,6 +62,23 @@ let player = createEntity({
     height: 16
   }
 });
+
+const createAnimation = (image, cellWidth) => {
+  // assumes image contains single row of equally-spaced cells
+  if (image.width % cellWidth !== 0) {
+    console.warn('image width not evenly divisible by cell width');
+  }
+  const frameCount = image.width / cellWidth;
+  const frames = createArray(frameCount);
+  return frames.map(function(frame, i) {
+    return {
+      x: i * cellWidth,
+      y: 0,
+      width: cellWidth,
+      height: image.height
+    };
+  });
+};
 
 player.move = (dir) => {
   const movePlayer = ({x = 0, y = 0}) => {
