@@ -236,11 +236,6 @@ const loop = () => {
   // update player
   let noInputs = true;
 
-  // a -> a -> Boolean
-  const equals = (val) => {
-    return (arrayVal) => arrayVal === val;
-  };
-
   for (const input in inputs) {
     if (inputs[input]) {
       noInputs = false;
