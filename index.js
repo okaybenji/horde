@@ -35,17 +35,12 @@ window.onresize = debounce(resize, 100);
 const arena = new Image();
 arena.src = './assets/images/arena.png';
 
-// TODO: is there a way to set defaults for a nested object with destructuring?
-// TODO: remove imgSrc requirement
-// TODO: remove sprite requirement; replace with an initial animation
-// TODO: remove animationName requirement; replace with an initial animation
-const createEntity = ({x = 0, y = 0, sprite, imgSrc, animationName }) => {
-  const img = new Image();
-  img.src = imgSrc;
-
-  const fullSprite = Object.assign({ frame: -1, lastUpdated: window.performance.now() }, sprite);
-
-  return { x, y, sprite: fullSprite, img, animation: 'walk_s' };
+const createEntity = ({x = 0, y = 0, animation }) => {
+  const sprite = Object.assign({}, animation.frames[0], {
+    frame: 0,
+    lastUpdated: window.performance.now()
+  });
+  return { x, y, sprite, animation};
 };
 
 const moveEntityBy = ({ entity, x = 0, y = 0 }) => {
@@ -73,7 +68,7 @@ const createAnimation = ({ image, frameCount }) => {
     };
   });
 
-  return frames;
+  return {image, frames};
 };
 
 const animateSprite = ({ sprite, animation, fps = 12, now }) => {
@@ -84,11 +79,11 @@ const animateSprite = ({ sprite, animation, fps = 12, now }) => {
   }
 
   let frame = sprite.frame + 1;
-  if (frame > animation.length - 1) {
+  if (frame > animation.frames.length - 1) {
     frame = 0;
   }
 
-  const newSprite = Object.assign({lastUpdated: now}, animation[frame]);
+  const newSprite = Object.assign({lastUpdated: now}, animation.frames[frame]);
   return newSprite;
 };
 
@@ -139,8 +134,7 @@ assets.forEach((asset) => {
 let player = createEntity({
   x: 152,
   y: 82,
-  sprite: animations.player.walk_s[0],
-  imgSrc: './assets/images/player/walk_s-2.png' // TODO: get rid of this
+  animation: animations.player.walk_s
 });
 
 player.move = (dir) => {
@@ -156,7 +150,7 @@ player.move = (dir) => {
   };
 
   let newPlayer = directions[dir](); // move player in directin
-  newPlayer.animation = 'walk_' + dir; // update player animation
+  newPlayer.animation = animations.player['walk_' + dir]; // update player animation
   return newPlayer;
 };
 
@@ -229,12 +223,12 @@ const loop = () => {
 
   player.sprite = animateSprite({
     sprite: player.sprite,
-    animation: animations.player[player.animation],
+    animation: player.animation,
     now: window.performance.now()
   });
 
   // draw player
-  ctx.drawImage(player.img, player.sprite.x, player.sprite.y, player.sprite.width, player.sprite.height, player.x, player.y, player.sprite.width, player.sprite.height);
+  ctx.drawImage(player.animation.image, player.sprite.x, player.sprite.y, player.sprite.width, player.sprite.height, player.x, player.y, player.sprite.width, player.sprite.height);
 
   // loop
   requestAnimationFrame(loop);
