@@ -36,13 +36,16 @@ const arena = new Image();
 arena.src = './assets/images/arena.png';
 
 // TODO: is there a way to set defaults for a nested object with destructuring?
-const createEntity = ({x = 0, y = 0, sprite }) => {
+// TODO: remove imgSrc requirement
+// TODO: remove sprite requirement; replace with an initial animation
+// TODO: remove animationName requirement; replace with an initial animation
+const createEntity = ({x = 0, y = 0, sprite, imgSrc, animationName }) => {
   const img = new Image();
-  img.src = sprite.src;
+  img.src = imgSrc;
 
   const fullSprite = Object.assign({ frame: -1, lastUpdated: window.performance.now() }, sprite);
 
-  return { x, y, sprite: fullSprite, img };
+  return { x, y, sprite: fullSprite, img, animation: 'walk_s' };
 };
 
 const moveEntityBy = ({ entity, x = 0, y = 0 }) => {
@@ -54,24 +57,12 @@ const moveEntityBy = ({ entity, x = 0, y = 0 }) => {
   return newEntity;
 };
 
-let player = createEntity({
-  x: 152,
-  y: 82,
-  sprite: {
-    src: './assets/images/player/walk/s.png',
-    x: 0,
-    y: 0,
-    width: 13,
-    height: 16
-  }
-});
-
-const createAnimation = ({ image, cellWidth }) => {
+const createAnimation = ({ image, frameCount }) => {
   // assumes image contains single row of equally-spaced cells
-  if (image.width % cellWidth !== 0) {
-    // console.warn('image width not evenly divisible by cell width');
+  if (image.width % frameCount !== 0) {
+    // console.warn('image width not evenly divisible by frame count');
   }
-  const frameCount = image.width / cellWidth;
+  const cellWidth = image.width / frameCount;
   const frames = createArray(frameCount).map(function(frame, i) {
     return {
       x: i * cellWidth,
@@ -101,6 +92,57 @@ const animateSprite = ({ sprite, animation, fps = 12, now }) => {
   return newSprite;
 };
 
+// TODO: access the filesystem to build this array automatically
+// TODO: automate entity factory creation using this data
+const assets = [
+  'player/attack_e-3.png',
+  'player/attack_n-3.png',
+  'player/attack_s-3.png',
+  'player/attack_w-3.png',
+  'player/roll_e-3.png',
+  'player/roll_n-3.png',
+  'player/roll_s-3.png',
+  'player/roll_w-3.png',
+  'player/shield_e-1.png',
+  'player/shield_n-1.png',
+  'player/shield_s-1.png',
+  'player/shield_w-1.png',
+  'player/walk_e-2.png',
+  'player/walk_n-2.png',
+  'player/walk_s-2.png',
+  'player/walk_w-2.png',
+].map((asset, i) => {
+  const slash = asset.indexOf('/');
+  const dash = asset.indexOf('-');
+  const dot = asset.indexOf('.');
+
+  return {
+    entity: asset.slice(0, slash),
+    name: asset.slice(slash + 1, dash),
+    frameCount: Number(asset.slice(dash + 1, dot)),
+    path: './assets/images/' + asset
+  };
+});
+
+// TODO: is there a better way to do this, mapping an array to an object?
+let animations = {};
+assets.forEach((asset) => {
+  if (!animations[asset.entity]) {
+    animations[asset.entity] = {};
+  }
+
+  let image = new Image();
+  image.src = asset.path;
+  animations[asset.entity][asset.name] = createAnimation({image, frameCount: asset.frameCount});
+});
+
+let player = createEntity({
+  x: 152,
+  y: 82,
+  sprite: animations.player.walk_s[0],
+  imgSrc: './assets/images/player/walk_s-2.png' // TODO: get rid of this
+});
+
 player.move = (dir) => {
   const movePlayer = ({x = 0, y = 0}) => {
     return moveEntityBy({entity: player, x, y});
@@ -113,11 +155,9 @@ player.move = (dir) => {
     w: () => movePlayer({x: -vel})
   };
 
-  return directions[dir]();
-};
-
-player.animations = {
-  walk: createAnimation({ image: player.img, cellWidth: 13 })
+  let newPlayer = directions[dir](); // move player in directin
+  newPlayer.animation = 'walk_' + dir; // update player animation
+  return newPlayer;
 };
 
 let input = {
@@ -189,7 +229,7 @@ const loop = () => {
 
   player.sprite = animateSprite({
     sprite: player.sprite,
-    animation: player.animations.walk,
+    animation: animations.player[player.animation],
     now: window.performance.now()
   });
 
