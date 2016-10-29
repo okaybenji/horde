@@ -76,6 +76,10 @@ const createAnimation = ({ image, frameCount }) => {
 };
 
 const animateSprite = ({ sprite, animation, fps = 12, now }) => {
+  if (sprite.isPaused) {
+    return sprite;
+  }
+
   const updateInterval = 1000 / fps;
   const delta = now - sprite.lastUpdated;
   if (delta < updateInterval) {
@@ -219,8 +223,10 @@ const loop = () => {
   ctx.drawImage(arena, -48, -146);
 
   // update player
+  let stopAnimating = true;
   for (const dir in input) {
     if (input[dir]) {
+      stopAnimating = false;
       player = player.move(dir);
     }
   }
@@ -230,6 +236,10 @@ const loop = () => {
     animation: player.animation,
     now: window.performance.now()
   });
+
+  // if all inputs are off/false, pause animation
+  // NOTE: might regret this later when i try to animate actions like attack :P
+  player.sprite.isPaused = stopAnimating;
 
   drawEntity(player);
 
