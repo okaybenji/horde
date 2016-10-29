@@ -241,23 +241,22 @@ const loop = () => {
     return (arrayVal) => arrayVal === val;
   };
 
-  // player cannot perform other actions while shield is up
-  if (inputs.shield) {
-    stopAnimating = false;
-    player.animation = animations.player['shield_' + player.dir];
-  } else {
-    for (const input in inputs) {
-      if (inputs[input]) {
-        stopAnimating = false;
-
-        const directions = ['n', 's', 'e', 'w'];
-        if (directions.find(equals(input))) {
-          player = player.move(input);
-        }
-      }
+  for (const input in inputs) {
+    if (inputs[input]) {
+      stopAnimating = false;
     }
   }
 
+  // player cannot perform other actions while shield is up
+  if (inputs.shield) {
+    player.animation = animations.player['shield_' + player.dir];
+  } else {
+    ['n', 's', 'e', 'w'].forEach((dir) => {
+      if (inputs[dir]) {
+        player = player.move(dir);
+      }
+    });
+  }
 
   player.sprite = animateSprite({
     sprite: player.sprite,
