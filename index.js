@@ -32,6 +32,10 @@ const resize = () => {
 resize();
 window.onresize = debounce(resize, 100);
 
+const drawEntity = (entity) => {
+  ctx.drawImage(entity.animation.image, entity.sprite.x, entity.sprite.y, entity.sprite.width, entity.sprite.height, entity.x, entity.y, entity.sprite.width, entity.sprite.height);
+};
+
 const arena = new Image();
 arena.src = './assets/images/arena.png';
 
@@ -227,8 +231,7 @@ const loop = () => {
     now: window.performance.now()
   });
 
-  // draw player
-  ctx.drawImage(player.animation.image, player.sprite.x, player.sprite.y, player.sprite.width, player.sprite.height, player.x, player.y, player.sprite.width, player.sprite.height);
+  drawEntity(player);
 
   // loop
   requestAnimationFrame(loop);
