@@ -35,6 +35,7 @@ window.onresize = debounce(resize, 100);
 const arena = new Image();
 arena.src = './assets/images/arena.png';
 
+// TODO: should i init entities with sprite frame of -1?
 const createEntity = ({x = 0, y = 0, sprite }) => {
   const img = new Image();
   img.src = sprite.src;
@@ -59,25 +60,61 @@ let player = createEntity({
     x: 0,
     y: 0,
     width: 13,
-    height: 16
+    height: 16,
+    frame: 0
   }
 });
 
-const createAnimation = (image, cellWidth) => {
+const createAnimation = ({ image, cellWidth }) => {
   // assumes image contains single row of equally-spaced cells
   if (image.width % cellWidth !== 0) {
-    console.warn('image width not evenly divisible by cell width');
+    // console.warn('image width not evenly divisible by cell width');
   }
   const frameCount = image.width / cellWidth;
-  const frames = createArray(frameCount);
-  return frames.map(function(frame, i) {
+  const frames = createArray(frameCount).map(function(frame, i) {
     return {
       x: i * cellWidth,
       y: 0,
       width: cellWidth,
-      height: image.height
+      height: image.height,
+      frame: i
     };
   });
+  const animation = {
+    frames,
+    lastUpdated: window.performance.now()
+  };
+
+  return animation;
+};
+
+// TODO: ugh, this is really gross, and it shouldn't be.
+// the problem is related to trying to functionally track the
+// last time the animation frame changed and the fact that
+// Object.assign makes a shallow clone of an object.
+const animateEntity = ({ entity, animationName, fps = 12, now }) => {
+  const animation = entity.animations[animationName];
+  const updateInterval = 1000 / fps;
+  if (now - animation.lastUpdated < updateInterval) {
+    return entity;
+  }
+
+  let frame = entity.sprite.frame + 1;
+  if (frame > animation.frames.length - 1) {
+    frame = 0;
+  }
+
+  const sprite = animation.frames[frame];
+
+  let animUpdate = {};
+  animUpdate[animationName] = {
+    frames: animation.frames
+  };
+  animUpdate[animationName].lastUpdated = now;
+  let animations = Object.assign({}, entity.animations, animUpdate);
+
+  const newEntity = Object.assign({}, entity, {sprite, animations});
+  return newEntity;
 };
 
 player.move = (dir) => {
@@ -93,6 +130,10 @@ player.move = (dir) => {
   };
 
   return directions[dir]();
+};
+
+player.animations = {
+  walk: createAnimation({ image: player.img, cellWidth: 13 })
 };
 
 let input = {
@@ -143,6 +184,10 @@ document.addEventListener('keyup', (e) => {
   input = updateInput(e.keyCode, false);
 });
 
+// TODO: update loop to accept state object with arena, player, and input.
+// set up the state inside a new function passed directly to the first call
+// to requestAnimationFrame.
+// not sure how input would work with the event listeners, though...
 const loop = () => {
   // clear canvas
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -156,6 +201,12 @@ const loop = () => {
       player = player.move(dir);
     }
   }
+
+  player = animateEntity({
+    entity: player,
+    animationName: 'walk',
+    now: window.performance.now()
+  });
 
   // draw player
   ctx.drawImage(player.img, player.sprite.x, player.sprite.y, player.sprite.width, player.sprite.height, player.x, player.y, player.sprite.width, player.sprite.height);
