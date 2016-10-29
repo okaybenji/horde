@@ -173,7 +173,7 @@ player.move = (dir) => {
   return newPlayer;
 };
 
-let input = {
+let inputs = {
   n: false,
   s: false,
   e: false,
@@ -181,9 +181,9 @@ let input = {
   atk: false
 };
 
-// Input, Number, Boolean -> Input
-function updateInput(input, keyCode, val) {
-  const newInput = function(keyCode) {
+// Inputs, Number, Boolean -> Inputs
+function updateInputs(inputs, keyCode, val) {
+  const newInputs = function(keyCode) {
     switch (keyCode) {
       // left
       case 65:
@@ -211,21 +211,21 @@ function updateInput(input, keyCode, val) {
     }
   };
 
-  return Object.assign({}, input, newInput(keyCode));
+  return Object.assign({}, inputs, newInputs(keyCode));
 }
 
 document.addEventListener('keydown', (e) => {
-  input = updateInput(input, e.keyCode, true);
+  inputs = updateInputs(inputs, e.keyCode, true);
 });
 
 document.addEventListener('keyup', (e) => {
-  input = updateInput(input, e.keyCode, false);
+  inputs = updateInputs(inputs, e.keyCode, false);
 });
 
-// TODO: update loop to accept state object with arena, player, and input.
+// TODO: update loop to accept state object with arena, player, and inputs.
 // set up the state inside a new function passed directly to the first call
 // to requestAnimationFrame.
-// not sure how input would work with the event listeners, though...
+// not sure how inputs/player would work with the event listeners, though...
 const loop = () => {
   // clear canvas
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -236,17 +236,17 @@ const loop = () => {
   // update player
   let stopAnimating = true;
 
-  // String -> String -> Boolean
-  const isDirection = (dir) => {
-    return (direction) => direction === dir;
+  // a -> a -> Boolean
+  const equals = (val) => {
+    return (arrayVal) => arrayVal === val;
   };
 
-  for (const dir in input) {
-    if (input[dir]) {
+  for (const input in inputs) {
+    if (inputs[input]) {
       stopAnimating = false;
       const directions = ['n', 's', 'e', 'w'];
-      if (directions.find(isDirection(dir))) {
-        player = player.move(dir);
+      if (directions.find(equals(input))) {
+        player = player.move(input);
       }
     }
   }
