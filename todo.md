@@ -6,3 +6,5 @@
 const newPlayer = entityFactories.player();
 console.log(newPlayer.animations.walk_s); // <- [Object, Object]
 ```
+
+* Look into polling inputs manually each frame. If you did this, you could remove event listeners and write more functional code (but obvs still depends on external state).

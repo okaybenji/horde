@@ -144,37 +144,6 @@ assets.forEach((asset) => {
 const arena = new Image();
 arena.src = './assets/images/arena.png';
 
-// create a south-facing player entity
-let player = createEntity({
-  x: 152,
-  y: 82,
-  animation: animations.player.walk_s
-});
-
-player.dir = 's';
-
-// String -> Entity
-player.move = (dir) => {
-  // Position -> Entity
-  const movePlayer = ({x = 0, y = 0}) => {
-    return moveEntityBy({entity: player, x, y});
-  };
-  // TODO: velocity is currently framerate-dependent!
-  const vel = 1;
-  const directions = {
-    n: () => movePlayer({y: -vel}),
-    s: () => movePlayer({y: vel}),
-    e: () => movePlayer({x: vel}),
-    w: () => movePlayer({x: -vel})
-  };
-
-  let newPlayer = directions[dir](); // move player in direction
-  newPlayer.animation = animations.player['walk_' + dir]; // update player animation
-  newPlayer.dir = dir;
-
-  return newPlayer;
-};
-
 let inputs = {
   n: false,
   s: false,
@@ -183,9 +152,49 @@ let inputs = {
   shield: false
 };
 
-player.update = (inputs) => {
+let factories = {
+  entities: {
+    player({x = 0, y = 0}) {
+      let newPlayer = createEntity({
+        x, y, animation: animations.player.walk_s
+      });
+      newPlayer.dir = 's'; // player starts out facing south
+      // newPlayer.animations = animations.player; // <- think about this
+
+      return newPlayer;
+    }
+  }
+};
+
+let player = factories.entities.player({x: 152, y: 82});
+
+// TODO: give player instances a move method
+// String -> Entity
+const movePlayer = (player, dir) => {
   let newPlayer = Object.assign({}, player);
 
+  // Position -> Entity
+  const movePlayerBy = ({x = 0, y = 0}) => {
+    return moveEntityBy({entity: newPlayer, x, y});
+  };
+  // TODO: velocity is currently framerate-dependent!
+  const vel = 1;
+  const directions = {
+    n: () => movePlayerBy({y: -vel}),
+    s: () => movePlayerBy({y: vel}),
+    e: () => movePlayerBy({x: vel}),
+    w: () => movePlayerBy({x: -vel})
+  };
+
+  newPlayer = directions[dir](); // move player in direction
+  newPlayer.animation = animations.player['walk_' + dir]; // update player animation
+  newPlayer.dir = dir;
+
+  return newPlayer;
+};
+
+player.update = (inputs) => {
+  let newPlayer = Object.assign({}, player);
   let noInputs = true;
 
   for (const input in inputs) {
@@ -208,7 +217,7 @@ player.update = (inputs) => {
     } else {
       ['n', 's', 'e', 'w']
         .filter((dir) => inputs[dir]) // which inputs are active
-        .forEach((dir) => newPlayer = newPlayer.move(dir));
+        .forEach((dir) => newPlayer = movePlayer(newPlayer, dir));
     }
   }
 
@@ -220,14 +229,6 @@ player.update = (inputs) => {
 
   return newPlayer;
 };
-
-document.addEventListener('keydown', (e) => {
-  inputs = updateInputs(inputs, e.keyCode, true);
-});
-
-document.addEventListener('keyup', (e) => {
-  inputs = updateInputs(inputs, e.keyCode, false);
-});
 
 // Inputs, Number, Boolean -> Inputs
 const updateInputs = (inputs, keyCode, val) => {
@@ -261,6 +262,14 @@ const updateInputs = (inputs, keyCode, val) => {
 
   return Object.assign({}, inputs, newInput(keyCode));
 };
+
+document.addEventListener('keydown', (e) => {
+  inputs = updateInputs(inputs, e.keyCode, true);
+});
+
+document.addEventListener('keyup', (e) => {
+  inputs = updateInputs(inputs, e.keyCode, false);
+});
 
 // TODO: update loop to accept state object with arena, player, and inputs.
 // set up the state inside a new function passed directly to the first call
