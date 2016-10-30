@@ -141,34 +141,21 @@ assets.forEach((asset) => {
   animations[asset.entity][asset.name] = createAnimation({image, frameCount: asset.frameCount});
 });
 
-const arena = new Image();
-arena.src = './assets/images/arena.png';
+// Date -> Entity -> Entity
+const animateAtTime = (now) => {
+  // Entity -> Entity
+  return (entity) => {
+    const newEntity = Object.assign({}, entity);
+    newEntity.sprite = animateSprite({
+      sprite: entity.sprite,
+      animation: entity.animation,
+      now
+    });
 
-let inputs = {
-  n: false,
-  s: false,
-  e: false,
-  w: false,
-  shield: false
+    return newEntity;
+  };
 };
 
-let factories = {
-  entities: {
-    player({x = 0, y = 0}) {
-      let newPlayer = createEntity({
-        x, y, animation: animations.player.walk_s
-      });
-      newPlayer.dir = 's'; // player starts out facing south
-      // newPlayer.animations = animations.player; // <- think about this
-
-      return newPlayer;
-    }
-  }
-};
-
-let player = factories.entities.player({x: 152, y: 82});
-
-// TODO: give player instances a move method
 // String -> Entity
 const movePlayer = (player, dir) => {
   let newPlayer = Object.assign({}, player);
@@ -193,7 +180,33 @@ const movePlayer = (player, dir) => {
   return newPlayer;
 };
 
-player.update = (inputs) => {
+const arena = new Image();
+arena.src = './assets/images/arena.png';
+
+let inputs = {
+  n: false,
+  s: false,
+  e: false,
+  w: false,
+  shield: false
+};
+
+let factories = {
+  entities: {}
+};
+
+factories.entities.player = ({x = 0, y = 0}) => {
+  let newPlayer = createEntity({
+    x, y, animation: animations.player.walk_s
+  });
+  newPlayer.dir = 's'; // player starts out facing south
+  // newPlayer.animations = animations.player; // <- think about this
+
+  return newPlayer;
+};
+
+// Player, Inputs -> Player
+const applyInputs = (player, inputs) => {
   let newPlayer = Object.assign({}, player);
   let noInputs = true;
 
@@ -209,11 +222,11 @@ player.update = (inputs) => {
   if (noInputs) {
     // reset to default animation
     // TODO: consider storing default animation on entity on creation
-    newPlayer.animation = animations.player['walk_' + newPlayer.dir];
+    newPlayer.animation = animations.player['walk_' + player.dir];
   } else {
-    // newPlayer cannot perform other actions while shield is up
+    // player cannot perform other actions while shield is up
     if (inputs.shield) {
-      newPlayer.animation = animations.player['shield_' + newPlayer.dir];
+      newPlayer.animation = animations.player['shield_' + player.dir];
     } else {
       ['n', 's', 'e', 'w']
         .filter((dir) => inputs[dir]) // which inputs are active
@@ -221,14 +234,17 @@ player.update = (inputs) => {
     }
   }
 
-  newPlayer.sprite = animateSprite({
-    sprite: newPlayer.sprite,
-    animation: newPlayer.animation,
-    now: window.performance.now()
-  });
-
   return newPlayer;
 };
+
+factories.entities.localPlayer = ({x = 0, y = 0, controls}) => {
+  let newLocalPlayer = factories.entities.player({x, y});
+  newLocalPlayer.applyInputs = applyInputs; // TODO: pass controls to applyInputs and get a new function back?
+
+  return newLocalPlayer;
+};
+
+let playerOne = factories.entities.localPlayer({x: 152, y: 82, controls: {}});
 
 // Inputs, Number, Boolean -> Inputs
 const updateInputs = (inputs, keyCode, val) => {
@@ -276,6 +292,8 @@ document.addEventListener('keyup', (e) => {
 // to requestAnimationFrame.
 // not sure how inputs/player would work with the event listeners, though...
 const loop = () => {
+  const now = window.performance.now();
+
   // clear canvas
   // TODO: look into only redrawing parts of the screen which have changed
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -284,8 +302,10 @@ const loop = () => {
   ctx.drawImage(arena, -48, -146);
 
   // update player
-  player = player.update(inputs);
-  drawEntity(player);
+  playerOne = applyInputs(playerOne, inputs);
+  const animate = animateAtTime(now);
+  playerOne = animate(playerOne);
+  drawEntity(playerOne);
 
   // loop
   requestAnimationFrame(loop);
