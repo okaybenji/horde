@@ -302,9 +302,8 @@ const loop = () => {
   ctx.drawImage(arena, -48, -146);
 
   // update player
-  playerOne = applyInputs(playerOne, inputs);
   const animate = animateAtTime(now);
-  playerOne = animate(playerOne);
+  playerOne = animate(applyInputs(playerOne, inputs));
   drawEntity(playerOne);
 
   // loop
