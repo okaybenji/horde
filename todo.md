@@ -8,3 +8,6 @@ console.log(newPlayer.animations.walk_s); // <- [Object, Object]
 ```
 
 * Look into polling inputs manually each frame. If you did this, you could remove event listeners and write more functional code (but obvs still depends on external state).
+
+* Update loop to accept state (with players, arena, etc). Updated state should be passed into each recursive call. Since state will be a deep object, something like this will be necessary:
+https://github.com/sindresorhus/deep-assign/

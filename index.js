@@ -98,7 +98,6 @@ const animateSprite = ({ sprite, animation, fps = 12, now }) => {
 };
 
 // TODO: access the filesystem to build this array automatically
-// TODO: automate entity factory creation using this data
 const assets = [
   'player/attack_e-3.png',
   'player/attack_n-3.png',
@@ -136,7 +135,7 @@ assets.forEach((asset) => {
     animations[asset.entity] = {};
   }
 
-  let image = new Image();
+  const image = new Image();
   image.src = asset.path;
   animations[asset.entity][asset.name] = createAnimation({image, frameCount: asset.frameCount});
 });
@@ -156,7 +155,7 @@ const animateAtTime = (now) => {
   };
 };
 
-// String -> Entity
+// Player, String -> Entity
 const movePlayer = (player, dir) => {
   let newPlayer = Object.assign({}, player);
 
@@ -183,14 +182,6 @@ const movePlayer = (player, dir) => {
 const arena = new Image();
 arena.src = './assets/images/arena.png';
 
-let inputs = {
-  n: false,
-  s: false,
-  e: false,
-  w: false,
-  shield: false
-};
-
 let factories = {
   entities: {}
 };
@@ -200,18 +191,24 @@ factories.entities.player = ({x = 0, y = 0}) => {
     x, y, animation: animations.player.walk_s
   });
   newPlayer.dir = 's'; // player starts out facing south
-  // newPlayer.animations = animations.player; // <- think about this
+  newPlayer.inputs = {
+    n: false,
+    s: false,
+    e: false,
+    w: false,
+    shield: false
+  };
 
   return newPlayer;
 };
 
-// Player, Inputs -> Player
-const applyInputs = (player, inputs) => {
+// Player -> Player
+const applyInputs = (player) => {
   let newPlayer = Object.assign({}, player);
   let noInputs = true;
 
-  for (const input in inputs) {
-    if (inputs[input]) {
+  for (const input in player.inputs) {
+    if (player.inputs[input]) {
       noInputs = false;
     }
   }
@@ -225,11 +222,11 @@ const applyInputs = (player, inputs) => {
     newPlayer.animation = animations.player['walk_' + player.dir];
   } else {
     // player cannot perform other actions while shield is up
-    if (inputs.shield) {
+    if (player.inputs.shield) {
       newPlayer.animation = animations.player['shield_' + player.dir];
     } else {
       ['n', 's', 'e', 'w']
-        .filter((dir) => inputs[dir]) // which inputs are active
+        .filter((dir) => player.inputs[dir]) // which inputs are active
         .forEach((dir) => newPlayer = movePlayer(newPlayer, dir));
     }
   }
@@ -237,14 +234,9 @@ const applyInputs = (player, inputs) => {
   return newPlayer;
 };
 
-factories.entities.localPlayer = ({x = 0, y = 0, controls}) => {
-  let newLocalPlayer = factories.entities.player({x, y});
-  newLocalPlayer.applyInputs = applyInputs; // TODO: pass controls to applyInputs and get a new function back?
+let playerOne = factories.entities.player({x: 152, y: 82});
 
-  return newLocalPlayer;
-};
-
-let playerOne = factories.entities.localPlayer({x: 152, y: 82, controls: {}});
+// TODO: create updateInputs factory which accepts a controls object which maps between keycodes and new inputs. use this to create a localPlayer factory which creates a player entity which responds to those inputs.
 
 // Inputs, Number, Boolean -> Inputs
 const updateInputs = (inputs, keyCode, val) => {
@@ -279,18 +271,15 @@ const updateInputs = (inputs, keyCode, val) => {
   return Object.assign({}, inputs, newInput(keyCode));
 };
 
+// create these listeners inside a localPlayer factory
 document.addEventListener('keydown', (e) => {
-  inputs = updateInputs(inputs, e.keyCode, true);
+  playerOne.inputs = updateInputs(playerOne.inputs, e.keyCode, true);
 });
 
 document.addEventListener('keyup', (e) => {
-  inputs = updateInputs(inputs, e.keyCode, false);
+  playerOne.inputs = updateInputs(playerOne.inputs, e.keyCode, false);
 });
 
-// TODO: update loop to accept state object with arena, player, and inputs.
-// set up the state inside a new function passed directly to the first call
-// to requestAnimationFrame.
-// not sure how inputs/player would work with the event listeners, though...
 const loop = () => {
   const now = window.performance.now();
 
@@ -303,7 +292,7 @@ const loop = () => {
 
   // update player
   const animate = animateAtTime(now);
-  playerOne = animate(applyInputs(playerOne, inputs));
+  playerOne = animate(applyInputs(playerOne));
   drawEntity(playerOne);
 
   // loop
