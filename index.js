@@ -183,8 +183,54 @@ let inputs = {
   shield: false
 };
 
+player.update = (inputs) => {
+  let newPlayer = Object.assign({}, player);
+
+  let noInputs = true;
+
+  for (const input in inputs) {
+    if (inputs[input]) {
+      noInputs = false;
+    }
+  }
+
+  // if all inputs are off/false, pause player animation
+  newPlayer.sprite.isPaused = noInputs;
+
+  if (noInputs) {
+    // reset to default animation
+    // TODO: consider storing default animation on entity on creation
+    newPlayer.animation = animations.player['walk_' + newPlayer.dir];
+  } else {
+    // newPlayer cannot perform other actions while shield is up
+    if (inputs.shield) {
+      newPlayer.animation = animations.player['shield_' + newPlayer.dir];
+    } else {
+      ['n', 's', 'e', 'w']
+        .filter((dir) => inputs[dir]) // which inputs are active
+        .forEach((dir) => newPlayer = newPlayer.move(dir));
+    }
+  }
+
+  newPlayer.sprite = animateSprite({
+    sprite: newPlayer.sprite,
+    animation: newPlayer.animation,
+    now: window.performance.now()
+  });
+
+  return newPlayer;
+};
+
+document.addEventListener('keydown', (e) => {
+  inputs = updateInputs(inputs, e.keyCode, true);
+});
+
+document.addEventListener('keyup', (e) => {
+  inputs = updateInputs(inputs, e.keyCode, false);
+});
+
 // Inputs, Number, Boolean -> Inputs
-function updateInputs(inputs, keyCode, val) {
+const updateInputs = (inputs, keyCode, val) => {
   const newInput = function(keyCode) {
     switch (keyCode) {
       // left
@@ -214,15 +260,7 @@ function updateInputs(inputs, keyCode, val) {
   };
 
   return Object.assign({}, inputs, newInput(keyCode));
-}
-
-document.addEventListener('keydown', (e) => {
-  inputs = updateInputs(inputs, e.keyCode, true);
-});
-
-document.addEventListener('keyup', (e) => {
-  inputs = updateInputs(inputs, e.keyCode, false);
-});
+};
 
 // TODO: update loop to accept state object with arena, player, and inputs.
 // set up the state inside a new function passed directly to the first call
@@ -237,38 +275,7 @@ const loop = () => {
   ctx.drawImage(arena, -48, -146);
 
   // update player
-  let noInputs = true;
-
-  for (const input in inputs) {
-    if (inputs[input]) {
-      noInputs = false;
-    }
-  }
-
-  // if all inputs are off/false, pause player animation
-  player.sprite.isPaused = noInputs;
-
-  if (noInputs) {
-    // reset to default animation
-    // TODO: consider storing default animation on entity on creation
-    player.animation = animations.player['walk_' + player.dir];
-  } else {
-    // player cannot perform other actions while shield is up
-    if (inputs.shield) {
-      player.animation = animations.player['shield_' + player.dir];
-    } else {
-      ['n', 's', 'e', 'w']
-        .filter((dir) => inputs[dir]) // which inputs are active
-        .forEach((dir) => player = player.move(dir));
-    }
-  }
-
-  player.sprite = animateSprite({
-    sprite: player.sprite,
-    animation: player.animation,
-    now: window.performance.now()
-  });
-
+  player = player.update(inputs);
   drawEntity(player);
 
   // loop
