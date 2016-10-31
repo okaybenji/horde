@@ -84,8 +84,15 @@ const createAnimation = ({ image, frameCount }) => {
 // Object -> Entity
 const seekTarget = ({entity, target, velocity = 1}) => {
   // TODO: figure out the math to ensure total velocity is 1 even if moving along x and y axes
-  const x = target.x === entity.x ? 0 : target.x > entity.x ? velocity : -velocity;
-  const y = target.y === entity.y ? 0 : target.y > entity.y ? velocity : -velocity;
+  // TODO: consider storing rounded positions on entity itself
+  const calcVelocity = (pos, targetPos) => {
+    const vel = Math.round(pos) === Math.round(targetPos) ? 0 :
+      pos < targetPos ? velocity : -velocity;
+    return vel;
+  };
+
+  const x = calcVelocity(entity.x, target.x);
+  const y = calcVelocity(entity.y, target.y);
 
   return moveEntityBy({entity, x, y});
 };
