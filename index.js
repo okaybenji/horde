@@ -43,7 +43,12 @@ const createEntity = ({x = 0, y = 0, animation }) => {
 };
 
 const drawEntity = (entity) => {
-  ctx.drawImage(entity.animation.image, entity.sprite.x, entity.sprite.y, entity.sprite.width, entity.sprite.height, entity.x, entity.y, entity.sprite.width, entity.sprite.height);
+  // ensure we don't draw at partial-pixel positions
+  // (in case, e.g., an entity's velocity is not divisible by 1)
+  const x = Math.round(entity.x);
+  const y = Math.round(entity.y);
+
+  ctx.drawImage(entity.animation.image, entity.sprite.x, entity.sprite.y, entity.sprite.width, entity.sprite.height, x, y, entity.sprite.width, entity.sprite.height);
 };
 
 // Entity -> Entity
@@ -304,7 +309,7 @@ const loop = () => {
   // update player
   const animate = animateAtTime(now);
   playerOne = animate(applyInputs(playerOne));
-  bat = animate(seekPlayer({player: playerOne, entity: bat}));
+  bat = animate(seekPlayer({player: playerOne, entity: bat, velocity: 0.4}));
   [playerOne, bat].forEach(drawEntity);
 
   // loop
