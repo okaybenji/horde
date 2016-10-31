@@ -171,6 +171,7 @@ const animateAtTime = (now) => {
     newEntity.sprite = animateSprite({
       sprite: entity.sprite,
       animation: entity.animation,
+      fps: entity.fps,
       now
     });
 
@@ -206,6 +207,7 @@ const arena = new Image();
 arena.src = './assets/images/arena.png';
 
 let factories = {
+  entity: createEntity,
   entities: {}
 };
 
@@ -293,7 +295,9 @@ const updateInputs = (inputs, keyCode, val) => {
 };
 
 let playerOne = factories.entities.player({x: 152, y: 82});
-let bat = createEntity({animation: animations.enemies.bat_fly_w});
+let bat = factories.entity({animation: animations.enemies.bat_fly_w});
+bat.fps = 60;
+
 bat.updateAnimation = ({bat, player}) => {
   if (bat.x === player.x) {
     return bat;
