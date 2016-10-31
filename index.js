@@ -76,6 +76,15 @@ const createAnimation = ({ image, frameCount }) => {
   return {image, frames};
 };
 
+// Object -> Entity
+const seekPlayer = ({entity, player, velocity = 1}) => {
+  // TODO: figure out the math to ensure total velocity is 1 even if moving along x and y axes
+  const x = player.x === entity.x ? 0 : player.x > entity.x ? velocity : -velocity;
+  const y = player.y === entity.y ? 0 : player.y > entity.y ? velocity : -velocity;
+
+  return moveEntityBy({entity, x, y});
+};
+
 // Object -> Sprite
 const animateSprite = ({ sprite, animation, fps = 12, now }) => {
   if (sprite.isPaused) {
@@ -295,7 +304,7 @@ const loop = () => {
   // update player
   const animate = animateAtTime(now);
   playerOne = animate(applyInputs(playerOne));
-  bat = animate(bat);
+  bat = animate(seekPlayer({player: playerOne, entity: bat}));
   [playerOne, bat].forEach(drawEntity);
 
   // loop
