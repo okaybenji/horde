@@ -115,6 +115,7 @@ const assets = [
   'player/walk_n-2.png',
   'player/walk_s-2.png',
   'player/walk_w-2.png',
+  'enemies/bat_fly-10.png'
 ].map((asset, i) => {
   const slash = asset.indexOf('/');
   const dash = asset.indexOf('-');
@@ -234,8 +235,6 @@ const applyInputs = (player) => {
   return newPlayer;
 };
 
-let playerOne = factories.entities.player({x: 152, y: 82});
-
 // TODO: create updateInputs factory which accepts a controls object which maps between keycodes and new inputs. use this to create a localPlayer factory which creates a player entity which responds to those inputs.
 
 // Inputs, Number, Boolean -> Inputs
@@ -271,6 +270,9 @@ const updateInputs = (inputs, keyCode, val) => {
   return Object.assign({}, inputs, newInput(keyCode));
 };
 
+let playerOne = factories.entities.player({x: 152, y: 82});
+let bat = createEntity({x: 150, y: 80, animation: animations.enemies.bat_fly});
+
 // create these listeners inside a localPlayer factory
 document.addEventListener('keydown', (e) => {
   playerOne.inputs = updateInputs(playerOne.inputs, e.keyCode, true);
@@ -293,7 +295,8 @@ const loop = () => {
   // update player
   const animate = animateAtTime(now);
   playerOne = animate(applyInputs(playerOne));
-  drawEntity(playerOne);
+  bat = animate(bat);
+  [playerOne, bat].forEach(drawEntity);
 
   // loop
   requestAnimationFrame(loop);
