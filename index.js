@@ -280,7 +280,7 @@ const updateInputs = (inputs, keyCode, val) => {
 };
 
 let playerOne = factories.entities.player({x: 152, y: 82});
-let bat = createEntity({x: 150, y: 80, animation: animations.enemies.bat_fly});
+let bat = createEntity({animation: animations.enemies.bat_fly});
 
 // create these listeners inside a localPlayer factory
 document.addEventListener('keydown', (e) => {
