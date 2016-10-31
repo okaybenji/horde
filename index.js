@@ -82,10 +82,10 @@ const createAnimation = ({ image, frameCount }) => {
 };
 
 // Object -> Entity
-const seekPlayer = ({entity, player, velocity = 1}) => {
+const seekTarget = ({entity, target, velocity = 1}) => {
   // TODO: figure out the math to ensure total velocity is 1 even if moving along x and y axes
-  const x = player.x === entity.x ? 0 : player.x > entity.x ? velocity : -velocity;
-  const y = player.y === entity.y ? 0 : player.y > entity.y ? velocity : -velocity;
+  const x = target.x === entity.x ? 0 : target.x > entity.x ? velocity : -velocity;
+  const y = target.y === entity.y ? 0 : target.y > entity.y ? velocity : -velocity;
 
   return moveEntityBy({entity, x, y});
 };
@@ -325,7 +325,7 @@ const loop = () => {
   const animate = animateAtTime(now);
   playerOne = animate(applyInputs(playerOne));
   bat = bat.updateAnimation({bat, player: playerOne});
-  bat = animate(seekPlayer({player: playerOne, entity: bat, velocity: 0.4}));
+  bat = animate(seekTarget({target: playerOne, entity: bat, velocity: 0.4}));
   [playerOne, bat].forEach(drawEntity);
 
   // loop
