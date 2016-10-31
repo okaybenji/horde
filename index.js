@@ -129,7 +129,8 @@ const assets = [
   'player/walk_n-2.png',
   'player/walk_s-2.png',
   'player/walk_w-2.png',
-  'enemies/bat_fly-10.png'
+  'enemies/bat_fly_w-10.png',
+  'enemies/bat_fly_e-10.png'
 ].map((asset, i) => {
   const slash = asset.indexOf('/');
   const dash = asset.indexOf('-');
@@ -285,7 +286,21 @@ const updateInputs = (inputs, keyCode, val) => {
 };
 
 let playerOne = factories.entities.player({x: 152, y: 82});
-let bat = createEntity({animation: animations.enemies.bat_fly});
+let bat = createEntity({animation: animations.enemies.bat_fly_w});
+bat.updateAnimation = ({bat, player}) => {
+  if (bat.x === player.x) {
+    return bat;
+  }
+
+  let newBat = Object.assign({}, bat);
+  if (bat.x < player.x) {
+    newBat.animation = animations.enemies.bat_fly_e;
+  } else {
+    newBat.animation = animations.enemies.bat_fly_w;
+  }
+
+  return newBat;
+};
 
 // create these listeners inside a localPlayer factory
 document.addEventListener('keydown', (e) => {
@@ -309,6 +324,7 @@ const loop = () => {
   // update player
   const animate = animateAtTime(now);
   playerOne = animate(applyInputs(playerOne));
+  bat = bat.updateAnimation({bat, player: playerOne});
   bat = animate(seekPlayer({player: playerOne, entity: bat, velocity: 0.4}));
   [playerOne, bat].forEach(drawEntity);
 
