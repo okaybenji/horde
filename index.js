@@ -227,6 +227,27 @@ factories.entities.player = ({x = 0, y = 0}) => {
   return newPlayer;
 };
 
+factories.entities.bat = ({x = 0, y = 0}) => {
+  let bat = createEntity({x, y, animation: animations.enemies.bat_fly_w});
+  bat.fps = 60;
+  bat.updateAnimation = ({bat, player}) => {
+    if (bat.x === player.x) {
+      return bat;
+    }
+
+    let newBat = Object.assign({}, bat);
+    if (bat.x < player.x) {
+      newBat.animation = animations.enemies.bat_fly_e;
+    } else {
+      newBat.animation = animations.enemies.bat_fly_w;
+    }
+
+    return newBat;
+  };
+
+  return bat;
+};
+
 // Player -> Player
 const applyInputs = (player) => {
   let newPlayer = Object.assign({}, player);
@@ -295,23 +316,8 @@ const updateInputs = (inputs, keyCode, val) => {
 };
 
 let playerOne = factories.entities.player({x: 152, y: 82});
-let bat = factories.entity({animation: animations.enemies.bat_fly_w});
-bat.fps = 60;
-
-bat.updateAnimation = ({bat, player}) => {
-  if (bat.x === player.x) {
-    return bat;
-  }
-
-  let newBat = Object.assign({}, bat);
-  if (bat.x < player.x) {
-    newBat.animation = animations.enemies.bat_fly_e;
-  } else {
-    newBat.animation = animations.enemies.bat_fly_w;
-  }
-
-  return newBat;
-};
+let bats = [{}, {x: 320}, {y: 180}, {x: 320, y: 180}]
+  .map(factories.entities.bat);
 
 // create these listeners inside a localPlayer factory
 document.addEventListener('keydown', (e) => {
@@ -335,9 +341,12 @@ const loop = () => {
   // update player
   const animate = animateAtTime(now);
   playerOne = animate(applyInputs(playerOne));
-  bat = bat.updateAnimation({bat, player: playerOne});
-  bat = animate(seekTarget({target: playerOne, entity: bat, velocity: 0.4}));
-  [playerOne, bat].forEach(drawEntity);
+  bats = bats
+    .map((bat) => bat.updateAnimation({bat, player: playerOne}))
+    .map((bat) => animate(seekTarget({target: playerOne, entity: bat, velocity: 0.4})));
+
+  drawEntity(playerOne);
+  bats.forEach(drawEntity);
 
   // loop
   requestAnimationFrame(loop);
