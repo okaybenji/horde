@@ -151,9 +151,7 @@ const assets = [
   };
 });
 
-// TODO: is there a better way to do this, mapping an array to an object?
-let animations = {};
-assets.forEach((asset) => {
+const animations = assets.reduce((animations, asset) => {
   if (!animations[asset.entity]) {
     animations[asset.entity] = {};
   }
@@ -161,7 +159,9 @@ assets.forEach((asset) => {
   const image = new Image();
   image.src = asset.path;
   animations[asset.entity][asset.name] = createAnimation({image, frameCount: asset.frameCount});
-});
+
+  return animations;
+}, {});
 
 // Date -> Entity -> Entity
 const animateAtTime = (now) => {
