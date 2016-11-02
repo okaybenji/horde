@@ -118,8 +118,8 @@ const animateSprite = ({ sprite, animation, fps = 12, now }) => {
   return newSprite;
 };
 
-// TODO: access the filesystem to build this array automatically
-const assets = [
+const animations = [
+  // TODO: access the filesystem to build this array automatically
   'player/attack_e-3.png',
   'player/attack_n-3.png',
   'player/attack_s-3.png',
@@ -149,9 +149,7 @@ const assets = [
     frameCount: Number(asset.slice(dash + 1, dot)),
     path: './assets/images/' + asset
   };
-});
-
-const animations = assets.reduce((animations, asset) => {
+}).reduce((animations, asset) => {
   if (!animations[asset.entity]) {
     animations[asset.entity] = {};
   }
