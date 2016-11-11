@@ -200,6 +200,9 @@ const movePlayer = (player, dir) => {
 const arena = new Image();
 arena.src = './assets/images/arena.png';
 
+const arenaBoundary = new Image();
+arenaBoundary.src = './assets/images/arena-b.png';
+
 let factories = {
   entity: createEntity,
   entities: {}
@@ -331,6 +334,7 @@ const loop = () => {
 
   // draw bg
   ctx.drawImage(arena, -48, -146);
+  ctx.drawImage(arenaBoundary, -48, -146);
 
   // update player
   const animate = animateAtTime(now);
