@@ -12,3 +12,5 @@ console.log(newPlayer.animations.walk_s); // <- [Object, Object]
 
 * Update loop to accept state (with players, arena, etc). Updated state should be passed into each recursive call. Since state will be a deep object, something like this will be necessary:
 https://github.com/sindresorhus/deep-assign/
+
+* Create camera system. If player moves beyond a buffer zone, camera (and buffer zone) should follow him at the player's speed. Once player stops moving, camera should decelerate and tween to center player in buffer zone.
