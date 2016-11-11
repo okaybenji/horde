@@ -82,19 +82,15 @@ const createAnimation = ({ image, frameCount }) => {
 };
 
 // Object -> Entity
-const seekTarget = ({entity, target, velocity = 1}) => {
-  // TODO: figure out the math to ensure total velocity is 1 even if moving along x and y axes
-  // TODO: consider storing rounded positions on entity itself
-  const calcVelocity = (pos, targetPos) => {
-    const vel = Math.round(pos) === Math.round(targetPos) ? 0 :
-      pos < targetPos ? velocity : -velocity;
-    return vel;
-  };
+const seekTarget = ({entity, target, neighbors, velocity = 1}) => {
+  const entPos = new DE.Math.Vector(entity.x, entity.y);
+  const tarPos = new DE.Math.Vector(target.x, target.y);
+//  const seekVector = DE.Steer.Behaviors.Arrive(pos, target, velocity);
+  const fleeVector = DE.Steer.Behaviors.Flee(entPos, tarPos, velocity, 128);
+  const seperationVector = DE.Steer.Behaviors.Seperation(entity, neighbors).Scale(0.02);
+  const cohesionVector = DE.Steer.Behaviors.Cohese(entPos, neighbors, velocity);
 
-  const x = calcVelocity(entity.x, target.x);
-  const y = calcVelocity(entity.y, target.y);
-
-  return moveEntityBy({entity, x, y});
+  return moveEntityBy(Object.assign({entity}, fleeVector.Add(seperationVector).Add(cohesionVector)));
 };
 
 // Object -> Sprite
@@ -341,7 +337,7 @@ const loop = () => {
   playerOne = animate(applyInputs(playerOne));
   bats = bats
     .map((bat) => bat.updateAnimation({bat, player: playerOne}))
-    .map((bat) => animate(seekTarget({target: playerOne, entity: bat, velocity: 0.4})));
+    .map((bat) => animate(seekTarget({target: playerOne, entity: bat, neighbors: bats, velocity: 0.4})));
 
   drawEntity(playerOne);
   bats.forEach(drawEntity);
