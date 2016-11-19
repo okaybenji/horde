@@ -1,3 +1,5 @@
+const spritesheets = require('../../data/spritesheets');
+const createPlayer = require('../player');
 let bats, player;
 
 const Play = (game) => {
@@ -8,14 +10,16 @@ const Play = (game) => {
       bats = [{}, {x: 320}, {y: 180}, {x: 320, y: 180}]
         .map((cfg) => {
           const bat = game.add.sprite(cfg.x || 0, cfg.y || 0, 'bat_fly_e');
+          spritesheets
+            .filter(spritesheet => spritesheet.entity === 'enemies')
+            .forEach(spritesheet => bat.animations.add(spritesheet.name));
           const shouldLoop = true;
-          bat.animations.add('fly');
-          bat.animations.play('fly', 30, shouldLoop);
+          bat.animations.play('bat_fly_e', 30, shouldLoop);
 
           return bat;
         });
 
-      player = game.add.sprite(152, 82, 'shield_s');
+      player = createPlayer(game, {x: 152, y: 82});
     },
 
     update() {
