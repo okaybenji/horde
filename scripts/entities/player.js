@@ -1,7 +1,10 @@
-const spritesheets = require('../data/spritesheets');
+const spritesheets = require('../../data/spritesheets');
 
 // TODO: my ESLint doesn't like destructuring with defaults!
-const createPlayer = (game, { x = 0, y = 0, orientation = 'right', controls = {}, gamepad = game.input.gamepad.pad1 }) => {
+// TODO: look into creating player without passing it game
+// game.add.sprite should happen in main.
+// creation of keys object can be handled by another module, and keys would be passed into player.
+const playerFactory = (game, { x = 0, y = 0, orientation = 'right', controls = {}, gamepad = game.input.gamepad.pad1 }) => {
   const defaultControls = {
     up: 'UP',
     down: 'DOWN',
@@ -175,4 +178,4 @@ const createPlayer = (game, { x = 0, y = 0, orientation = 'right', controls = {}
   return player;
 };
 
-module.exports = createPlayer;
+module.exports = playerFactory;
