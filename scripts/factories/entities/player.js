@@ -1,7 +1,8 @@
 const spritesheets = require('../../../data/spritesheets');
+const utils = require('../../utils');
 
-const playerFactory = ({ sprite, keys, gamepad, dir = 's' }) => {
-  const player = sprite;
+const playerFactory = ({ sprite, keys, gamepad, bounds, dir = 's' }) => {
+  let player = sprite;
 
   // used to allow sub-pixel movement without introducing sprite artifacts
   player.subX = player.x;
@@ -40,23 +41,28 @@ const playerFactory = ({ sprite, keys, gamepad, dir = 's' }) => {
       const speed = 1.5;
       const fps = 12;
       const shouldLoop = false;
+      let position = {x: player.subX, y: player.subY, width: player.width, height: player.height};
 
       player.dir = direction;
 
       switch (direction) {
         case 'w':
-          player.subX -= speed;
+          position.x -= speed;
           break;
         case 'e':
-          player.subX += speed;
+          position.x += speed;
           break;
         case 'n':
-          player.subY -= speed;
+          position.y -= speed;
           break;
         case 's':
-          player.subY += speed;
+          position.y += speed;
           break;
       }
+
+      position = utils.keepInBounds(position, bounds);
+      player.subX = position.x;
+      player.subY = position.y;
 
       if (!player.animations.currentAnim.isPlaying) {
         player.loadTexture('walk_' + player.dir);
