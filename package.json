@@ -1,0 +1,25 @@
+{
+  "name": "horde",
+  "version": "0.0.1",
+  "description": "horde mode",
+  "main": "bundle.js",
+  "scripts": {
+    "build": "browserify scripts/states/main.js -o bundle.js",
+    "watch": "watchify scripts/states/main.js -o bundle.js -d"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okaybenji/horde.git"
+  },
+  "author": "Benji Kay",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/okaybenji/horde/issues"
+  },
+  "homepage": "https://github.com/okaybenji/horde#readme",
+  "devDependencies": {
+    "browserify": "^13.1.1",
+    "watchify": "^3.7.0"
+  },
+  "dependencies": {}
+}
