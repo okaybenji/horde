@@ -39,8 +39,6 @@ const batFactory = ({sprite, target, neighbors}) => {
         bat.animations.play('bat_fly_w', fps, shouldLoop);
       }
     }
-
-    return bat;
   };
 
   return bat;
