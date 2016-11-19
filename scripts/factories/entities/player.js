@@ -1,39 +1,17 @@
-const spritesheets = require('../../data/spritesheets');
+const spritesheets = require('../../../data/spritesheets');
 
-// TODO: my ESLint doesn't like destructuring with defaults!
-// TODO: look into creating player without passing it game
-// game.add.sprite should happen in main.
-// creation of keys object can be handled by another module, and keys would be passed into player.
-const playerFactory = (game, { x = 0, y = 0, orientation = 'right', controls = {}, gamepad = game.input.gamepad.pad1 }) => {
-  const defaultControls = {
-    up: 'UP',
-    down: 'DOWN',
-    left: 'LEFT',
-    right: 'RIGHT',
-    shield: 'SPACEBAR',
-    attack: 'SHIFT'
-  };
+const playerFactory = ({ sprite, keys, gamepad, dir = 's' }) => {
+  const player = sprite;
 
-  const ctrls = Object.assign({}, defaultControls, controls);
-
-  const keys = {
-    up: game.input.keyboard.addKey(Phaser.Keyboard[ctrls.up]),
-    down: game.input.keyboard.addKey(Phaser.Keyboard[ctrls.down]),
-    left: game.input.keyboard.addKey(Phaser.Keyboard[ctrls.left]),
-    right: game.input.keyboard.addKey(Phaser.Keyboard[ctrls.right]),
-    shield: game.input.keyboard.addKey(Phaser.Keyboard[ctrls.shield]),
-    attack: game.input.keyboard.addKey(Phaser.Keyboard[ctrls.attack]),
-  };
-
-  var actions = {
+  const actions = {
     attack: function attack() {
-      var duration = 200;
-      var interval = 600;
-      var velocity = 100;
+      const duration = 200;
+      const interval = 600;
+      const velocity = 100;
       const fps = 12;
       const shouldLoop = false;
 
-      var canAttack = (Date.now() > player.lastAttacked + interval) && !player.isDodging;
+      const canAttack = (Date.now() > player.lastAttacked + interval) && !player.isDodging;
       if (!canAttack) {
         return;
       }
@@ -103,8 +81,8 @@ const playerFactory = (game, { x = 0, y = 0, orientation = 'right', controls = {
     }
   };
 
-  let player = game.add.sprite(x, y, 'walk_s');
-  player.dir = 's';
+  player.loadTexture('walk_' + dir);
+  player.dir = dir;
 
   spritesheets
     .filter(spritesheet => spritesheet.entity === 'player')

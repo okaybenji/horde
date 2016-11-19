@@ -1,4 +1,4 @@
-const spritesheets = require('../../../data/spritesheets');
+const spritesheets = require('../../../../data/spritesheets');
 
 const batFactory = ({sprite, target, neighbors}) => {
   const bat = sprite;

@@ -3,10 +3,13 @@ let bats = [], player;
 
 // TODO: search fs to build this object automatically
 const factories = {
-  player: require('../entities/player'),
-  enemies: {
-    bat: require('../entities/enemies/bat')
-  }
+  entities: {
+    player: require('../factories/entities/player'),
+    enemies: {
+      bat: require('../factories/entities/enemies/bat')
+    }
+  },
+  keys: require('../factories/keys')
 };
 
 const Play = (game) => {
@@ -14,12 +17,16 @@ const Play = (game) => {
     create() {
       game.add.sprite(-48, -146, 'arena');
 
-      player = factories.player(game, {x: 152, y: 82});
+      player = factories.entities.player({
+        sprite: game.add.sprite(152, 82),
+        keys: factories.keys(game),
+        gamepad: game.input.gamepad.pad1
+      });
 
       [{}, {x: 320}, {y: 180}, {x: 320, y: 180}]
         .map(pos => game.add.sprite(pos.x, pos.y))
         .map(sprite => ({sprite, target: player, neighbors: bats}))
-        .map(cfg => factories.enemies.bat(cfg))
+        .map(cfg => factories.entities.enemies.bat(cfg))
         .forEach(bat => bats.push(bat));
     },
 
