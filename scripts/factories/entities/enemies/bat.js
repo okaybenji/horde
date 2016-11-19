@@ -18,13 +18,13 @@ const batFactory = ({sprite, target, neighbors}) => {
     const batPos = new DE.Math.Vector(bat.x, bat.y);
     const targetPos = new DE.Math.Vector(target.x, target.y);
     // const seekVector = DE.Steer.Behaviors.Arrive(batPos, targetPos, velocity);
+    const seperationVector = DE.Steer.Behaviors.Seperation(batPos, neighbors).Scale(0.05);
     const fleeVector = DE.Steer.Behaviors.Flee(batPos, targetPos, velocity, 128);
-    const seperationVector = DE.Steer.Behaviors.Seperation(batPos, neighbors).Scale(0.02);
     const cohesionVector = DE.Steer.Behaviors.Cohese(batPos, neighbors, velocity);
+    // const vector = seekVector.Add(seperationVector);
     const vector = fleeVector
       .Add(seperationVector)
       .Add(cohesionVector);
-    // const vector = seekVector;
     bat.x += vector.x;
     bat.y += vector.y;
 
