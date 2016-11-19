@@ -1,5 +1,8 @@
 const Play = (game) => {
-  let bats = [], rats = [], player;
+  let player;
+  let bats = [];
+  let rats = [];
+  let enemies = [];
 
   const spritesheets = require('../../data/spritesheets');
 
@@ -26,6 +29,7 @@ const Play = (game) => {
         keys: factories.keys(game),
         gamepad: game.input.gamepad.pad1,
         bounds,
+        enemies, //  for now, passing enemies to player to allow killing them... come up with better solution
         game // adding this back in for now. remove it when you figure out how to do the sword w/o it!
       });
 
@@ -33,13 +37,13 @@ const Play = (game) => {
         .map(pos => game.add.sprite(pos.x, pos.y))
         .map(sprite => ({sprite, target: player, neighbors: bats, bounds}))
         .map(cfg => factories.entities.enemies.bat(cfg))
-        .forEach(bat => bats.push(bat));
+        .forEach(bat => bats.push(bat) && enemies.push(bat));
 
       [{}, {x: 320}, {y: 180}, {x: 320, y: 180}]
         .map(pos => game.add.sprite(pos.x, pos.y))
         .map(sprite => ({sprite, target: player, neighbors: rats, bounds}))
         .map(cfg => factories.entities.enemies.rat(cfg))
-        .forEach(rat => rats.push(rat));
+        .forEach(rat => rats.push(rat) && enemies.push(rat));
     },
 
     update() {

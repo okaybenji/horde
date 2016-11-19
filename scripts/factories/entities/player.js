@@ -1,7 +1,7 @@
 const spritesheets = require('../../../data/spritesheets');
 const utils = require('../../utils');
 
-const playerFactory = ({ game, sprite, keys, gamepad, bounds, dir = 's' }) => {
+const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir = 's' }) => {
   let player = sprite;
 
   // used to allow sub-pixel movement without introducing sprite artifacts
@@ -40,6 +40,20 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, dir = 's' }) => {
       slash.animations.add(slashAnimation);
       slash.animations.play(slashAnimation, fps);
       slash.animations.currentAnim.onComplete.add(() => slash.kill());
+
+      // kill enemies that were struck
+      game.stage.updateTransform(); // ensure slash bounds exist
+
+      const checkOverlap = (spriteA, spriteB) => {
+        const boundsA = spriteA.getBounds();
+        const boundsB = spriteB.getBounds();
+
+        return Phaser.Rectangle.intersects(boundsA, boundsB);
+      };
+
+      enemies
+        .filter(enemy => checkOverlap(slash, enemy))
+        .forEach(hitEnemy => hitEnemy.kill());
     },
 
     endAttack: function endAttack() {
