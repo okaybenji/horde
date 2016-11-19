@@ -21,7 +21,7 @@ const utils = {
         func.apply(context, args);
       }
     };
-  }  
+  }
 };
 
 module.exports = utils;

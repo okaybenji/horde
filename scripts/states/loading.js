@@ -11,7 +11,6 @@ const Loading = (game) => {
     preload() {
       // TODO: load all images automatically
       game.load.image('arena', '../../assets/images/arena.png');
-      // game.load.spritesheet('blueScarf', 'images/sprites/bit-scarf-blue.gif', 5, 2);
 
       const spritesheets = [
         // TODO: access the filesystem to build this array automatically
