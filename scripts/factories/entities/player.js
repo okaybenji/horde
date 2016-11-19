@@ -3,6 +3,10 @@ const spritesheets = require('../../../data/spritesheets');
 const playerFactory = ({ sprite, keys, gamepad, dir = 's' }) => {
   const player = sprite;
 
+  // used to allow sub-pixel movement without introducing sprite artifacts
+  player.subX = player.x;
+  player.subY = player.y;
+
   const actions = {
     attack: function attack() {
       const duration = 200;
@@ -30,7 +34,10 @@ const playerFactory = ({ sprite, keys, gamepad, dir = 's' }) => {
     },
 
     walk: function walk(direction) {
-      const speed = 2;
+      // TODO: sub-pixel movement is not as smooth
+      // a speed of e.g. 2 looks/feels smoother
+      // can anything be done about this?
+      const speed = 1.5;
       const fps = 12;
       const shouldLoop = false;
 
@@ -38,16 +45,16 @@ const playerFactory = ({ sprite, keys, gamepad, dir = 's' }) => {
 
       switch (direction) {
         case 'w':
-          player.x -= speed;
+          player.subX -= speed;
           break;
         case 'e':
-          player.x += speed;
+          player.subX += speed;
           break;
         case 'n':
-          player.y -= speed;
+          player.subY -= speed;
           break;
         case 's':
-          player.y += speed;
+          player.subY += speed;
           break;
       }
 
@@ -151,6 +158,8 @@ const playerFactory = ({ sprite, keys, gamepad, dir = 's' }) => {
       actions.attack();
     }
 
+    player.x = Math.round(player.subX);
+    player.y = Math.round(player.subY);
   };
 
   return player;
