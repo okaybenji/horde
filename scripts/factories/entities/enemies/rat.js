@@ -1,8 +1,9 @@
 // TODO: pull common functionality between bat and rat into shareable component
 const spritesheets = require('../../../../data/spritesheets');
+const utils = require('../../../utils');
 
 const ratFactory = ({sprite, target, neighbors, bounds}) => {
-  const rat = sprite;
+  let rat = sprite;
   const fps = 18;
   const shouldLoop = true;
 
@@ -42,18 +43,7 @@ const ratFactory = ({sprite, target, neighbors, bounds}) => {
     rat.x += vector.x;
     rat.y += vector.y;
 
-    // collide with world bounds
-    if (rat.x < bounds.x) {
-      rat.x = bounds.x;
-    } else if (rat.x + rat.width > bounds.x + bounds.width) {
-      rat.x = bounds.x + bounds.width - rat.width;
-    }
-
-    if (rat.y < bounds.y) {
-      rat.y = bounds.y;
-    } else if (rat.y + rat.height > bounds.y + bounds.height) {
-      rat.y = bounds.y + bounds.height - rat.height;
-    }
+    rat = utils.keepInBounds(rat, bounds);
   };
 
   return rat;

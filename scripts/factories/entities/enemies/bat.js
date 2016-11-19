@@ -1,7 +1,8 @@
 const spritesheets = require('../../../../data/spritesheets');
+const utils = require('../../../utils');
 
 const batFactory = ({sprite, target, neighbors, bounds}) => {
-  const bat = sprite;
+  let bat = sprite;
   const fps = 30;
   const shouldLoop = true;
 
@@ -39,18 +40,7 @@ const batFactory = ({sprite, target, neighbors, bounds}) => {
     bat.x += vector.x;
     bat.y += vector.y;
 
-    // collide with world bounds
-    if (bat.x < bounds.x) {
-      bat.x = bounds.x;
-    } else if (bat.x + bat.width > bounds.x + bounds.width) {
-      bat.x = bounds.x + bounds.width - bat.width;
-    }
-
-    if (bat.y < bounds.y) {
-      bat.y = bounds.y;
-    } else if (bat.y + bat.height > bounds.y + bounds.height) {
-      bat.y = bounds.y + bounds.height - bat.height;
-    }
+    bat = utils.keepInBounds(bat, bounds);
   };
 
   return bat;
