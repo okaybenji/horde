@@ -25,7 +25,8 @@ const Play = (game) => {
         sprite: game.add.sprite(152, 82),
         keys: factories.keys(game),
         gamepad: game.input.gamepad.pad1,
-        bounds
+        bounds,
+        game // adding this back in for now. remove it when you figure out how to do the sword w/o it!
       });
 
       [{}, {x: 320}, {y: 180}, {x: 320, y: 180}]

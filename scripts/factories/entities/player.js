@@ -1,7 +1,7 @@
 const spritesheets = require('../../../data/spritesheets');
 const utils = require('../../utils');
 
-const playerFactory = ({ sprite, keys, gamepad, bounds, dir = 's' }) => {
+const playerFactory = ({ game, sprite, keys, gamepad, bounds, dir = 's' }) => {
   let player = sprite;
 
   // used to allow sub-pixel movement without introducing sprite artifacts
@@ -27,6 +27,19 @@ const playerFactory = ({ sprite, keys, gamepad, bounds, dir = 's' }) => {
       player.loadTexture('attack_' + player.dir);
       player.animations.play('attack_' + player.dir, fps, shouldLoop);
       setTimeout(actions.endAttack, duration);
+
+      // create sword slash
+      const slashAnimation = 'slash_' + player.dir;
+      const slashX = player.dir === 'e' ? 8
+        : player.dir === 'w' ? -8
+        : 0;
+      const slashY = player.dir === 's' ? 8
+        : player.dir === 'n' ? -8
+        : 0;
+      const slash = game.add.sprite(player.x + slashX, player.y + slashY, slashAnimation);
+      slash.animations.add(slashAnimation);
+      slash.animations.play(slashAnimation, fps);
+      slash.animations.currentAnim.onComplete.add(() => slash.kill());
     },
 
     endAttack: function endAttack() {
