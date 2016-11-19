@@ -1,10 +1,12 @@
 const spritesheets = require('../../../data/spritesheets');
 
-const batFactory = (game, {x, y, target, neighbors}) => {
+const batFactory = ({sprite, target, neighbors}) => {
+  const bat = sprite;
   const fps = 30;
   const shouldLoop = true;
 
-  const bat = game.add.sprite(x || 0, y || 0, 'bat_fly_e');
+  bat.loadTexture('bat_fly_e');
+
   spritesheets
     .filter(spritesheet => spritesheet.entity === 'enemies')
     .forEach(spritesheet => bat.animations.add(spritesheet.name));

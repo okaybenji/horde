@@ -17,8 +17,9 @@ const Play = (game) => {
       player = factories.player(game, {x: 152, y: 82});
 
       [{}, {x: 320}, {y: 180}, {x: 320, y: 180}]
-        .map(cfg => Object.assign({target: player, neighbors: bats}, cfg))
-        .map(cfg => factories.enemies.bat(game, cfg))
+        .map(pos => game.add.sprite(pos.x, pos.y))
+        .map(sprite => ({sprite, target: player, neighbors: bats}))
+        .map(cfg => factories.enemies.bat(cfg))
         .forEach(bat => bats.push(bat));
     },
 
