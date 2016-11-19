@@ -7,9 +7,6 @@ const main = {
       utils.resize(game)
     }, 100);
 
-    // TODO: setting bounds keeps bg from appearing..?
-    //game.world.setBounds(0, -game.width, game.width, game.height);
-
     // prevent game pausing when it loses focus
     game.stage.disableVisibilityChange = true;
 

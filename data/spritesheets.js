@@ -17,7 +17,9 @@ const spritesheets = [
   'player/walk_s-2.png',
   'player/walk_w-2.png',
   'enemies/bat_fly_w-10.png',
-  'enemies/bat_fly_e-10.png'
+  'enemies/bat_fly_e-10.png',
+  'enemies/rat_walk_w-10.png',
+  'enemies/rat_walk_e-10.png'
 ].map((asset, i) => {
   const slash = asset.indexOf('/');
   const dash = asset.indexOf('-');
