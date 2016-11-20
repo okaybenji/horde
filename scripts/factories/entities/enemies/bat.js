@@ -6,14 +6,14 @@ const batFactory = ({sprite, target, neighbors, bounds}) => {
   const fps = 30;
   const shouldLoop = true;
 
-  bat.loadTexture('bat_fly_e');
+  bat.loadTexture('bat_move_e');
   bat.dir = 'e';
 
   spritesheets
     .filter(spritesheet => spritesheet.entity === 'enemies')
     .forEach(spritesheet => bat.animations.add(spritesheet.name));
 
-  bat.animations.play('bat_fly_e', fps, shouldLoop);
+  bat.animations.play('bat_move_e', fps, shouldLoop);
 
   bat.actions = {
     die() {
@@ -45,16 +45,16 @@ const batFactory = ({sprite, target, neighbors, bounds}) => {
       .Add(cohesionVector);
 
     if (vector.x > 0) {
-      if (bat.animations.currentAnim.name === 'bat_fly_w') {
+      if (bat.animations.currentAnim.name === 'bat_move_w') {
         bat.dir = 'e';
-        bat.loadTexture('bat_fly_e');
-        bat.animations.play('bat_fly_e', fps, shouldLoop);
+        bat.loadTexture('bat_move_e');
+        bat.animations.play('bat_move_e', fps, shouldLoop);
       }
     } else if (vector.x < 0) {
-      if (bat.animations.currentAnim.name === 'bat_fly_e') {
+      if (bat.animations.currentAnim.name === 'bat_move_e') {
         bat.dir = 'w';
-        bat.loadTexture('bat_fly_w');
-        bat.animations.play('bat_fly_w', fps, shouldLoop);
+        bat.loadTexture('bat_move_w');
+        bat.animations.play('bat_move_w', fps, shouldLoop);
       }
     }
 

@@ -7,14 +7,14 @@ const ratFactory = ({sprite, target, neighbors, bounds}) => {
   const fps = 18;
   const shouldLoop = true;
 
-  rat.loadTexture('rat_walk_e');
+  rat.loadTexture('rat_move_e');
   rat.dir = 'e';
 
   spritesheets
     .filter(spritesheet => spritesheet.entity === 'enemies')
     .forEach(spritesheet => rat.animations.add(spritesheet.name));
 
-  rat.animations.play('rat_walk_e', fps, shouldLoop);
+  rat.animations.play('rat_move_e', fps, shouldLoop);
 
   rat.actions = {
     die() {
@@ -46,16 +46,16 @@ const ratFactory = ({sprite, target, neighbors, bounds}) => {
       .Add(cohesionVector);
 
     if (vector.x > 0) {
-      if (rat.animations.currentAnim.name === 'rat_walk_w') {
+      if (rat.animations.currentAnim.name === 'rat_move_w') {
         rat.dir = 'e';
-        rat.loadTexture('rat_walk_e');
-        rat.animations.play('rat_walk_e', fps, shouldLoop);
+        rat.loadTexture('rat_move_e');
+        rat.animations.play('rat_move_e', fps, shouldLoop);
       }
     } else if (vector.x < 0) {
-      if (rat.animations.currentAnim.name === 'rat_walk_e') {
+      if (rat.animations.currentAnim.name === 'rat_move_e') {
         rat.dir = 'w';
-        rat.loadTexture('rat_walk_w');
-        rat.animations.play('rat_walk_w', fps, shouldLoop);
+        rat.loadTexture('rat_move_w');
+        rat.animations.play('rat_move_w', fps, shouldLoop);
       }
     }
 
