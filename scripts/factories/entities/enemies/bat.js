@@ -18,6 +18,7 @@ const batFactory = ({sprite, target, neighbors, bounds}) => {
   const bat = enemyFactory({
     name: 'bat',
     sprite,
+    neighbors,
     bounds,
     movement,
     fps: 30

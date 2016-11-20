@@ -1,7 +1,7 @@
 const spritesheets = require('../../../../data/spritesheets');
 const utils = require('../../../utils');
 
-const enemyFactory = ({name, sprite, bounds, movement, fps = 18}) => {
+const enemyFactory = ({name, sprite, bounds, neighbors, movement, fps = 18}) => {
   let enemy = sprite;
   const shouldLoop = true;
 
@@ -18,6 +18,9 @@ const enemyFactory = ({name, sprite, bounds, movement, fps = 18}) => {
     die() {
       if (enemy.isDead) {
         enemy.kill(); // if the enemy already died, destroy it
+        // remove enemy from list
+        const i = neighbors.indexOf(enemy);
+        neighbors.splice(i, 1);
         return;
       }
 
