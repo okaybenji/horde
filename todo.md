@@ -6,12 +6,12 @@
 
 * Look into using ES6 import/export (Browserify doesn't seem to like it atm... maybe switch to Webpack or Rollup)
 
-* When player slash attack sprite is created, check for collision with with other entities and trigger event (for now, kill enemy colliding with slash)
-
 * If an entity is seeking the player from the direction the player is facing and is not already overlapping the player, and the player is holding up her shield, entity should collide with the shield and not be able to move closer to the player than the shield's position.
 
 * Give player a dodge/roll action.
 
 * Upgrade player with a three-stage attack (if timed correctly): quick, quick, long. If second or third stage not activated in a timely fashion, player must wait normal fixed duration before attacking again. Long attack does more damage.
 
-* Add idle and death animations to enemies.
+* Add idle and attack animations to enemies.
+
+* Give enemies and player health, and show visual feedback when they take damage.
