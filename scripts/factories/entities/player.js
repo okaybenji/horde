@@ -53,7 +53,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
 
       enemies
         .filter(enemy => checkOverlap(slash, enemy))
-        .forEach(hitEnemy => hitEnemy.kill());
+        .forEach(hitEnemy => hitEnemy.actions.die());
     },
 
     endAttack: function endAttack() {

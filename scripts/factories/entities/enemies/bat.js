@@ -14,6 +14,10 @@ const batFactory = ({sprite, target, neighbors, bounds}) => {
 
   bat.animations.play('bat_fly_e', fps, shouldLoop);
 
+  bat.actions = {
+    die: () => bat.kill()
+  };
+
   bat.update = () => {
     const velocity = 1;
     const batPos = new DE.Math.Vector(bat.x, bat.y);
