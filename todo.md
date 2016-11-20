@@ -15,3 +15,7 @@
 * Add idle and attack animations to enemies.
 
 * Give enemies and player health, and show visual feedback when they take damage.
+
+* Look into either flipping sprites or building flipped spritesheets in code to reduce time spent manually creating spritesheets (e.g. 'w' when we already have 'e')
+
+* Figure out how to apply collision map to background art
