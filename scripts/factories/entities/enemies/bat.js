@@ -7,6 +7,7 @@ const batFactory = ({sprite, target, neighbors, bounds}) => {
   const shouldLoop = true;
 
   bat.loadTexture('bat_fly_e');
+  bat.dir = 'e';
 
   spritesheets
     .filter(spritesheet => spritesheet.entity === 'enemies')
@@ -15,10 +16,24 @@ const batFactory = ({sprite, target, neighbors, bounds}) => {
   bat.animations.play('bat_fly_e', fps, shouldLoop);
 
   bat.actions = {
-    die: () => bat.kill()
+    die() {
+      if (bat.isDead) {
+        bat.kill(); // if the bat already died, destroy it
+        return;
+      }
+
+      const deathAnimation = 'bat_die_' + bat.dir;
+      bat.loadTexture(deathAnimation);
+      bat.animations.play(deathAnimation, fps);
+      bat.isDead = true;
+    }
   };
 
   bat.update = () => {
+    if (bat.isDead) {
+      return;
+    }
+
     const velocity = 1;
     const batPos = new DE.Math.Vector(bat.x, bat.y);
     const targetPos = new DE.Math.Vector(target.x, target.y);
@@ -31,11 +46,13 @@ const batFactory = ({sprite, target, neighbors, bounds}) => {
 
     if (vector.x > 0) {
       if (bat.animations.currentAnim.name === 'bat_fly_w') {
+        bat.dir = 'e';
         bat.loadTexture('bat_fly_e');
         bat.animations.play('bat_fly_e', fps, shouldLoop);
       }
     } else if (vector.x < 0) {
       if (bat.animations.currentAnim.name === 'bat_fly_e') {
+        bat.dir = 'w';
         bat.loadTexture('bat_fly_w');
         bat.animations.play('bat_fly_w', fps, shouldLoop);
       }

@@ -22,6 +22,8 @@ const spritesheets = [
   'player/slash_w-3.png',
   'enemies/bat_fly_w-10.png',
   'enemies/bat_fly_e-10.png',
+  'enemies/bat_die_w-10.png',
+  'enemies/bat_die_e-10.png',
   'enemies/rat_walk_w-10.png',
   'enemies/rat_walk_e-10.png',
   'enemies/rat_die_w-10.png',

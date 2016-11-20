@@ -19,7 +19,7 @@ const ratFactory = ({sprite, target, neighbors, bounds}) => {
   rat.actions = {
     die() {
       if (rat.isDead) {
-        rat.kill(); // if the rate already died, destroy it
+        rat.kill(); // if the rat already died, destroy it
         return;
       }
 
