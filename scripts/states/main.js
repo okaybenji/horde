@@ -4,7 +4,7 @@ const main = {
 
     utils.resize(game);
     window.onresize = utils.debounce(() => {
-      utils.resize(game)
+      utils.resize(game);
     }, 100);
 
     // prevent game pausing when it loses focus

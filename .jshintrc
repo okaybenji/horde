@@ -1,6 +1,7 @@
 {
   "esnext": 6,
   "browser": true,
+  "node": true,
   "globals": {
     "DE": true,
     "Phaser": true

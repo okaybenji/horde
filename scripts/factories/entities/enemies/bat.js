@@ -1,41 +1,9 @@
-const spritesheets = require('../../../../data/spritesheets');
-const utils = require('../../../utils');
+const enemyFactory = require('./generic');
 
 const batFactory = ({sprite, target, neighbors, bounds}) => {
-  let bat = sprite;
-  const fps = 30;
-  const shouldLoop = true;
-
-  bat.loadTexture('bat_move_e');
-  bat.dir = 'e';
-
-  spritesheets
-    .filter(spritesheet => spritesheet.entity === 'enemies')
-    .forEach(spritesheet => bat.animations.add(spritesheet.name));
-
-  bat.animations.play('bat_move_e', fps, shouldLoop);
-
-  bat.actions = {
-    die() {
-      if (bat.isDead) {
-        bat.kill(); // if the bat already died, destroy it
-        return;
-      }
-
-      const deathAnimation = 'bat_die_' + bat.dir;
-      bat.loadTexture(deathAnimation);
-      bat.animations.play(deathAnimation, fps);
-      bat.isDead = true;
-    }
-  };
-
-  bat.update = () => {
-    if (bat.isDead) {
-      return;
-    }
-
+  const movement = () => {
     const velocity = 1;
-    const batPos = new DE.Math.Vector(bat.x, bat.y);
+    const batPos = new DE.Math.Vector(sprite.x, sprite.y);
     const targetPos = new DE.Math.Vector(target.x, target.y);
     const seekVector = DE.Steer.Behaviors.Arrive(batPos, targetPos, velocity);
     const seperationVector = DE.Steer.Behaviors.Seperation(batPos, neighbors).Scale(0.05);
@@ -44,25 +12,16 @@ const batFactory = ({sprite, target, neighbors, bounds}) => {
       .Add(seperationVector)
       .Add(cohesionVector);
 
-    if (vector.x > 0) {
-      if (bat.animations.currentAnim.name === 'bat_move_w') {
-        bat.dir = 'e';
-        bat.loadTexture('bat_move_e');
-        bat.animations.play('bat_move_e', fps, shouldLoop);
-      }
-    } else if (vector.x < 0) {
-      if (bat.animations.currentAnim.name === 'bat_move_e') {
-        bat.dir = 'w';
-        bat.loadTexture('bat_move_w');
-        bat.animations.play('bat_move_w', fps, shouldLoop);
-      }
-    }
-
-    bat.x += vector.x;
-    bat.y += vector.y;
-
-    bat = utils.keepInBounds(bat, bounds);
+    return vector;
   };
+
+  const bat = enemyFactory({
+    name: 'bat',
+    sprite,
+    bounds,
+    movement,
+    fps: 30
+  });
 
   return bat;
 };
