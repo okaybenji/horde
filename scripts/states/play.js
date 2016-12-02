@@ -3,6 +3,7 @@ const Play = (game) => {
   let bats = [];
   let rats = [];
   let enemies = [];
+  let cursors;
 
   const spritesheets = require('../../data/spritesheets');
 
@@ -18,14 +19,13 @@ const Play = (game) => {
     keys: require('../factories/keys')
   };
 
-  const bounds = {x: 0, y: 0, width: game.width, height: game.height};
-
   const play = {
     create() {
-      game.add.sprite(-48, -146, 'arena');
+      const arena = game.add.sprite(0, 0, 'arena');
+      const bounds = {x: 0, y: 0, width: arena.width, height: arena.height};
 
       player = factories.entities.player({
-        sprite: game.add.sprite(152, 82),
+        sprite: game.add.sprite(200, 228),
         keys: factories.keys(game),
         gamepad: game.input.gamepad.pad1,
         bounds,
@@ -33,22 +33,24 @@ const Play = (game) => {
         game // adding this back in for now. remove it when you figure out how to do the sword w/o it!
       });
 
-      [{}, {x: 320}, {y: 180}, {x: 320, y: 180}]
+      // camera lerp
+      game.world.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+      game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.02, 0.02);
+
+      [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
         .map(pos => game.add.sprite(pos.x, pos.y))
         .map(sprite => ({sprite, target: player, neighbors: bats, bounds}))
         .map(cfg => factories.entities.enemies.bat(cfg))
         .forEach(bat => bats.push(bat) && enemies.push(bat));
 
-      [{}, {x: 320}, {y: 180}, {x: 320, y: 180}]
+      [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
         .map(pos => game.add.sprite(pos.x, pos.y))
         .map(sprite => ({sprite, target: player, neighbors: rats, bounds}))
         .map(cfg => factories.entities.enemies.rat(cfg))
         .forEach(rat => rats.push(rat) && enemies.push(rat));
     },
 
-    update() {
-
-    }
+    update() {}
   };
   
   return play;
