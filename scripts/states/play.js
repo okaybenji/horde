@@ -35,6 +35,9 @@ const Play = (game) => {
 
       // camera lerp
       game.world.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+      // start camera at player's position (from top left rather than center)
+      game.camera.x = player.x - game.width / 2;
+      game.camera.y = player.y - game.height / 2;
       game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.02, 0.02);
 
       [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
