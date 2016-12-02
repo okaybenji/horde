@@ -40,17 +40,17 @@ const Play = (game) => {
       game.camera.y = player.y - game.height / 2;
       game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.02, 0.02);
 
-      [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
-        .map(pos => game.add.sprite(pos.x, pos.y))
-        .map(sprite => ({sprite, target: player, neighbors: bats, bounds}))
-        .map(cfg => factories.entities.enemies.bat(cfg))
-        .forEach(bat => bats.push(bat) && enemies.push(bat));
-
-      [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
-        .map(pos => game.add.sprite(pos.x, pos.y))
-        .map(sprite => ({sprite, target: player, neighbors: rats, bounds}))
-        .map(cfg => factories.entities.enemies.rat(cfg))
-        .forEach(rat => rats.push(rat) && enemies.push(rat));
+//      [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
+//        .map(pos => game.add.sprite(pos.x, pos.y))
+//        .map(sprite => ({sprite, target: player, neighbors: bats, bounds}))
+//        .map(cfg => factories.entities.enemies.bat(cfg))
+//        .forEach(bat => bats.push(bat) && enemies.push(bat));
+//
+//      [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
+//        .map(pos => game.add.sprite(pos.x, pos.y))
+//        .map(sprite => ({sprite, target: player, neighbors: rats, bounds}))
+//        .map(cfg => factories.entities.enemies.rat(cfg))
+//        .forEach(rat => rats.push(rat) && enemies.push(rat));
     },
 
     update() {}

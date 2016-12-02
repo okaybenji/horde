@@ -16,6 +16,6 @@
 
 * Give enemies and player health, and show visual feedback when they take damage.
 
-* Look into either flipping sprites or building flipped spritesheets in code to reduce time spent manually creating spritesheets (e.g. 'w' when we already have 'e')
+* Look into either flipping sprites or building flipped spritesheets in code to reduce time spent manually creating spritesheets (e.g. 'w' when we already have 'e'). Uh, or maybe some pixel art/animation editors which already allow you to look at specific frames have automated ways to flip spritesheets while maintaining frame order. Stop screwing around and get a decent editor!
 
 * Figure out how to apply collision map to background art
