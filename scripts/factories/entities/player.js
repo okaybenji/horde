@@ -24,12 +24,12 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
       player.isAttacking = true;
       player.lastAttacked = Date.now();
 
-      player.loadTexture('attack_' + player.dir);
-      player.animations.play('attack_' + player.dir, fps, shouldLoop);
+      player.loadTexture('player_attack_' + player.dir);
+      player.animations.play('player_attack_' + player.dir, fps, shouldLoop);
       setTimeout(actions.endAttack, duration);
 
       // create sword slash
-      const slashAnimation = 'slash_' + player.dir;
+      const slashAnimation = 'player_slash_' + player.dir;
       const slashX = player.dir === 'e' ? 8
         : player.dir === 'w' ? -8
         : 0;
@@ -58,7 +58,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
 
     endAttack: function endAttack() {
       player.isAttacking = false;
-      player.loadTexture('walk_' + player.dir);
+      player.loadTexture('player_walk_' + player.dir);
     },
 
     walk: function walk(direction) {
@@ -92,8 +92,8 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
       player.subY = position.y;
 
       if (!player.animations.currentAnim.isPlaying) {
-        player.loadTexture('walk_' + player.dir);
-        player.animations.play('walk_' + player.dir, fps, shouldLoop);
+        player.loadTexture('player_walk_' + player.dir);
+        player.animations.play('player_walk_' + player.dir, fps, shouldLoop);
       }
     },
 
@@ -102,7 +102,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
         return;
       }
 
-      player.loadTexture('shield_' + player.dir);
+      player.loadTexture('player_shield_' + player.dir);
     },
 
     takeDamage: function takeDamage(amount) {
@@ -121,7 +121,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
     }
   };
 
-  player.loadTexture('walk_' + dir);
+  player.loadTexture('player_walk_' + dir);
   player.dir = dir;
 
   spritesheets
@@ -183,7 +183,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
 
       if (!input.left && !input.right && !input.up && !input.down && !player.isAttacking) {
         // stop animation / lower shield
-        player.loadTexture('walk_' + player.dir);
+        player.loadTexture('player_walk_' + player.dir);
       }
     }
 

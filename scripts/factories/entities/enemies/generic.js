@@ -9,7 +9,7 @@ const enemyFactory = ({name, sprite, bounds, neighbors, movement, fps = 18}) => 
   enemy.dir = 'e';
 
   spritesheets
-    .filter(spritesheet => spritesheet.entity === 'enemies') // TODO: modify spritesheet to give specific enemy name, e.g. 'bat' instead of 'enemies'
+    .filter(spritesheet => spritesheet.entity === name)
     .forEach(spritesheet => enemy.animations.add(spritesheet.name));
 
   enemy.animations.play(name + '_move_e', fps, shouldLoop);

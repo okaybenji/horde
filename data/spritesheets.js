@@ -20,30 +20,32 @@ const spritesheets = [
   'player/slash_n-3.png',
   'player/slash_s-3.png',
   'player/slash_w-3.png',
-  'enemies/bat_move_w-10.png',
-  'enemies/bat_move_e-10.png',
-  'enemies/bat_die_w-10.png',
-  'enemies/bat_die_e-10.png',
-  'enemies/rat_move_w-10.png',
-  'enemies/rat_move_e-10.png',
-  'enemies/rat_die_w-10.png',
-  'enemies/rat_die_e-10.png'
+  'bat/move_w-10.png',
+  'bat/move_e-10.png',
+  'bat/die_w-10.png',
+  'bat/die_e-10.png',
+  'rat/move_w-10.png',
+  'rat/move_e-10.png',
+  'rat/die_w-10.png',
+  'rat/die_e-10.png'
 ].map((asset, i) => {
   const slash = asset.indexOf('/');
+  const underscore = asset.indexOf('_');
   const dash = asset.indexOf('-');
   const dot = asset.indexOf('.');
 
-  return {
-    entity: asset.slice(0, slash),
-    name: asset.slice(slash + 1, dash),
-    frameCount: Number(asset.slice(dash + 1, dot)),
-    // TODO: apparently watchify doesn't like (()=>())
-    image: (function() {
-      const image = new Image();
-      image.src = '../../assets/images/' + asset;
-      return image;
-    }())
-  };
+  const entity = asset.slice(0, slash);
+  const name = entity + '_' + asset.slice(slash + 1, dash);
+  const frameCount = Number(asset.slice(dash + 1, dot));
+  const src = '../../assets/images/' + asset;
+  // TODO: apparently watchify doesn't like (()=>())
+  const image = (function() {
+    const image = new Image();
+    image.src = src;
+    return image;
+  }());
+
+  return { entity, name, frameCount, image };
 });
 
 module.exports = spritesheets;
