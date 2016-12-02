@@ -4,8 +4,8 @@
   "description": "horde mode",
   "main": "bundle.js",
   "scripts": {
-    "build": "browserify scripts/states/main.js -o bundle.js",
-    "watch": "watchify scripts/states/main.js -o bundle.js -d"
+    "build": "browserify scripts/index.js -o bundle.js",
+    "watch": "watchify scripts/index.js -o bundle.js -d"
   },
   "repository": {
     "type": "git",
