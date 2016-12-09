@@ -18,6 +18,7 @@ const ratFactory = ({sprite, target, neighbors, bounds}) => {
   const rat = enemyFactory({
     name: 'rat',
     sprite,
+    target,
     neighbors,
     bounds,
     movement,
