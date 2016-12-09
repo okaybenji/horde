@@ -12,7 +12,7 @@
 
 * Upgrade player with a three-stage attack (if timed correctly): quick, quick, long. If second or third stage not activated in a timely fashion, player must wait normal fixed duration before attacking again. Long attack does more damage.
 
-* Add idle and attack animations to enemies.
+* Add attack animations to enemies.
 
 * Give enemies and player health, and show visual feedback when they take damage.
 

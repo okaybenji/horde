@@ -22,10 +22,14 @@ const spritesheets = [
   'player/slash_w-3.png',
   'bat/move_w-10.png',
   'bat/move_e-10.png',
+  'bat/idle_w-10.png',
+  'bat/idle_e-10.png',
   'bat/die_w-10.png',
   'bat/die_e-10.png',
   'rat/move_w-10.png',
   'rat/move_e-10.png',
+  'rat/idle_w-10.png',
+  'rat/idle_e-10.png',
   'rat/die_w-10.png',
   'rat/die_e-10.png'
 ].map((asset, i) => {

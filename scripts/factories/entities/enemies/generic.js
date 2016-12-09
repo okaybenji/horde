@@ -38,19 +38,21 @@ const enemyFactory = ({name, sprite, bounds, neighbors, movement, fps = 18}) => 
     }
 
     const vector = movement();
+    const play = (animationName) => {
+      if (enemy.animations.currentAnim.name !== animationName) {
+        enemy.loadTexture(animationName);
+        enemy.animations.play(animationName, fps, shouldLoop);
+      }
+    };
 
-    if (vector.x > 0) {
-      if (enemy.animations.currentAnim.name === name + '_move_w') {
-        enemy.dir = 'e';
-        enemy.loadTexture(name + '_move_e');
-        enemy.animations.play(name + '_move_e', fps, shouldLoop);
-      }
-    } else if (vector.x < 0) {
-      if (enemy.animations.currentAnim.name === name + '_move_e') {
-        enemy.dir = 'w';
-        enemy.loadTexture(name + '_move_w');
-        enemy.animations.play(name + '_move_w', fps, shouldLoop);
-      }
+    if (vector.x > 0.01) {
+      enemy.dir = 'e';
+      play(name + '_move_e');
+    } else if (vector.x < -0.01) {
+      enemy.dir = 'w';
+      play(name + '_move_w');
+    } else {
+      play(name + '_idle_' + enemy.dir);
     }
 
     enemy.x += vector.x;
