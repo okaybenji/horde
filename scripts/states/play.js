@@ -1,9 +1,9 @@
 const Play = (game) => {
   let player;
+  let entities;
   let bats = [];
   let rats = [];
   let enemies = [];
-  let cursors;
 
   const spritesheets = require('../../data/spritesheets');
 
@@ -19,10 +19,12 @@ const Play = (game) => {
     keys: require('../factories/keys')
   };
 
+
   const play = {
     create() {
       const arena = game.add.sprite(0, 0, 'arena');
       const bounds = {x: 0, y: 0, width: arena.width, height: arena.height};
+      entities = game.add.group();
 
       player = factories.entities.player({
         sprite: game.add.sprite(200, 228),
@@ -32,6 +34,7 @@ const Play = (game) => {
         enemies, //  for now, passing enemies to player to allow killing them... come up with better solution
         game // adding this back in for now. remove it when you figure out how to do the sword w/o it!
       });
+      entities.add(player);
 
       // camera lerp
       game.world.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -44,16 +47,28 @@ const Play = (game) => {
         .map(pos => game.add.sprite(pos.x, pos.y))
         .map(sprite => ({sprite, target: player, neighbors: bats, bounds}))
         .map(cfg => factories.entities.enemies.bat(cfg))
-        .forEach(bat => bats.push(bat) && enemies.push(bat));
+        .forEach(bat => {
+          bats.push(bat);
+          enemies.push(bat);
+          entities.add(bat);
+        });
 
       [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
         .map(pos => game.add.sprite(pos.x, pos.y))
         .map(sprite => ({sprite, target: player, neighbors: rats, bounds}))
         .map(cfg => factories.entities.enemies.rat(cfg))
-        .forEach(rat => rats.push(rat) && enemies.push(rat));
+        .forEach(rat => {
+          rats.push(rat);
+          enemies.push(rat);
+          entities.add(rat);
+        });
+
     },
 
-    update() {}
+    update() {
+      // depth sort entities
+      entities.sort('y', Phaser.Group.SORT_ASCENDING);
+    }
   };
   
   return play;
