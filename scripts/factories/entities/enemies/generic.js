@@ -38,7 +38,7 @@ const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 
     },
     attack() {
       const damage = atk;
-      const numFrames = 10; // TODO: pass this in or get it dynamically
+      const numFrames = enemy.animations._anims[name + '_attack_e']._frames.length;
       const duration = 1000 / fps * numFrames; // attack duration = attack animation duration
       const interval = duration; // TODO: consider including an idle time between attacks
 
