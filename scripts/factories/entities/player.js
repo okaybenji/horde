@@ -1,7 +1,8 @@
 const spritesheets = require('../../../data/spritesheets');
+const behaviors = require('./behaviors');
 const utils = require('../../utils');
 
-const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir = 's' }) => {
+const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir = 's', hp = 100 }) => {
   let player = sprite;
 
   // used to allow sub-pixel movement without introducing sprite artifacts
@@ -51,9 +52,10 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
         return Phaser.Rectangle.intersects(boundsA, boundsB);
       };
 
+      const damage = 10;
       enemies
         .filter(enemy => checkOverlap(slash, enemy))
-        .forEach(hitEnemy => hitEnemy.actions.die());
+        .forEach(hitEnemy => hitEnemy.actions.takeDamage(damage));
     },
 
     endAttack: function endAttack() {
@@ -105,13 +107,8 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
       player.loadTexture('player_shield_' + player.dir);
     },
 
-    takeDamage: function takeDamage(amount) {
-      player.hp -= amount;
-
-      if (player.hp < 0) {
-        player.hp = 0;
-        actions.die();
-      }
+    takeDamage(amount) {
+      behaviors.takeDamage(player, amount);
     },
 
     die: function() {
@@ -123,6 +120,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
 
   player.loadTexture('player_walk_' + dir);
   player.dir = dir;
+  player.hp = hp;
 
   spritesheets
     .filter(spritesheet => spritesheet.entity === 'player')
@@ -194,6 +192,8 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
     player.x = Math.round(player.subX);
     player.y = Math.round(player.subY);
   };
+
+  player.actions = actions;
 
   return player;
 };

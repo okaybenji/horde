@@ -1,12 +1,14 @@
 const spritesheets = require('../../../../data/spritesheets');
+const behaviors = require('../behaviors');
 const utils = require('../../../utils');
 
-const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 18, range = 20}) => {
+const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 18, range = 20, hp = 20}) => {
   let enemy = sprite;
   const shouldLoop = true;
 
   enemy.loadTexture(name + '_move_e');
   enemy.dir = 'e';
+  enemy.hp = hp;
 
   spritesheets
     .filter(spritesheet => spritesheet.entity === name)
@@ -15,6 +17,9 @@ const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 
   enemy.animations.play(name + '_move_e', fps, shouldLoop);
 
   enemy.actions = {
+    takeDamage(amount) {
+      behaviors.takeDamage(enemy, amount);
+    },
     die() {
       if (enemy.isDead) {
         enemy.kill(); // if the enemy already died, destroy it
