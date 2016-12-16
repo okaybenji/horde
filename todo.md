@@ -12,6 +12,4 @@
 
 * Upgrade player with a three-stage attack (if timed correctly): quick, quick, long. If second or third stage not activated in a timely fashion, player must wait normal fixed duration before attacking again. Long attack does more damage.
 
-* Look into either flipping sprites or building flipped spritesheets in code to reduce time spent manually creating spritesheets (e.g. 'w' when we already have 'e')
-
 * Figure out how to apply collision map to background art
