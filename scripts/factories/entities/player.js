@@ -12,6 +12,10 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
   const actions = {
     removeTint: behaviors.removeTint(player),
     attack: function attack() {
+      if (player.isDead) {
+        return;
+      }
+
       const duration = 200;
       const interval = 600;
       const velocity = 100;
