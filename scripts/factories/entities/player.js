@@ -64,6 +64,10 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
     },
 
     walk: function walk(direction) {
+      if (player.isDead) {
+        return;
+      }
+
       // TODO: sub-pixel movement is not as smooth
       // a speed of e.g. 2 looks/feels smoother
       // can anything be done about this?
@@ -113,6 +117,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
 
     die: function() {
       player.isDead = true;
+      player.angle = 45;
       // game.sfx.play('die');
       // actions.endAttack();
       // player.lastAttacked = 0;
