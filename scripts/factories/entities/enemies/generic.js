@@ -2,13 +2,14 @@ const spritesheets = require('../../../../data/spritesheets');
 const behaviors = require('../behaviors');
 const utils = require('../../../utils');
 
-const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 18, range = 20, hp = 20}) => {
+const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 18, range = 20, hp = 20, atk = 5}) => {
   let enemy = sprite;
   const shouldLoop = true;
 
   enemy.loadTexture(name + '_move_e');
   enemy.dir = 'e';
   enemy.hp = hp;
+  enemy.lastAttacked = 0;
 
   spritesheets
     .filter(spritesheet => spritesheet.entity === name)
@@ -34,6 +35,27 @@ const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 
       enemy.loadTexture(deathAnimation);
       enemy.animations.play(deathAnimation, fps);
       enemy.isDead = true;
+    },
+    attack() {
+      const damage = atk;
+      const numFrames = 10; // TODO: pass this in or get it dynamically
+      const duration = 1000 / fps * numFrames; // attack duration = attack animation duration
+      const interval = duration; // TODO: consider including an idle time between attacks
+
+      const canAttack = Date.now() > enemy.lastAttacked + interval;
+      if (!canAttack) {
+        return;
+      }
+
+      enemy.lastAttacked = Date.now();
+
+      // target takes damage half-way through the attack animation
+      // (if the enemy and target are still alive and the target is still in range)
+      setTimeout(() => {
+        if(!enemy.isDead && !target.isDead && utils.targetIsInRange(enemy, target, range)) {
+          target.actions.takeDamage(damage);
+        }
+      }, duration / 2);
     }
   };
 
@@ -50,12 +72,9 @@ const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 
       }
     };
 
-    const targetInRange = enemy.x > target.x - range &&
-                          enemy.x < target.x + range &&
-                          enemy.y > target.y - range &&
-                          enemy.y < target.y + range;
-    if (targetInRange) {
+    if (!target.isDead && utils.targetIsInRange(enemy, target, range)) {
       play(name + '_attack_' + enemy.dir);
+      enemy.actions.attack(target);
     } else {
       if (vector.x > 0.01) {
         enemy.dir = 'e';

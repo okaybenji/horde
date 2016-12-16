@@ -2,6 +2,8 @@ const behaviors = {
   takeDamage: (entity, amount) => {
     entity.tint = 0xFF0000;
     entity.alpha = 0.75;
+
+    // TODO: cancel this timeout if entity takes more damage before it fires (debounce)
     setTimeout(() => {
       if (entity) {
         entity.tint = 0xFFFFFF;

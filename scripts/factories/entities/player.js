@@ -112,6 +112,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
     },
 
     die: function() {
+      player.isDead = true;
       // game.sfx.play('die');
       // actions.endAttack();
       // player.lastAttacked = 0;
@@ -126,6 +127,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
     .filter(spritesheet => spritesheet.entity === 'player')
     .forEach(spritesheet => player.animations.add(spritesheet.name));
 
+  player.isDead = false;
   player.isDodging = false;
   player.isAttacking = false;
   player.lastAttacked = 0;

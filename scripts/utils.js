@@ -36,7 +36,14 @@ const utils = {
     }
 
     return entity;
-  }
+  },
+
+  targetIsInRange(entity, target, range) {
+    return entity.x > target.x - range &&
+           entity.x < target.x + range &&
+           entity.y > target.y - range &&
+           entity.y < target.y + range;
+  },
 };
 
 module.exports = utils;
