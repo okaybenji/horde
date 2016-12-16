@@ -45,7 +45,11 @@ const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 
       }
     };
 
-    if (enemy.x > target.x - range && enemy.x < target.x + range) {
+    const targetInRange = enemy.x > target.x - range &&
+                          enemy.x < target.x + range &&
+                          enemy.y > target.y - range &&
+                          enemy.y < target.y + range;
+    if (targetInRange) {
       play(name + '_attack_' + enemy.dir);
     } else {
       if (vector.x > 0.01) {
@@ -58,7 +62,6 @@ const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 
         play(name + '_idle_' + enemy.dir);
       }
     }
-
 
     enemy.x += vector.x;
     enemy.y += vector.y;
