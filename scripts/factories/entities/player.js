@@ -10,6 +10,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
   player.subY = player.y;
 
   const actions = {
+    removeTint: behaviors.removeTint(player),
     attack: function attack() {
       const duration = 200;
       const interval = 600;

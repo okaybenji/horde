@@ -21,6 +21,7 @@ const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 
     takeDamage(amount) {
       behaviors.takeDamage(enemy, amount);
     },
+    removeTint: behaviors.removeTint(enemy),
     die() {
       if (enemy.isDead) {
         enemy.kill(); // if the enemy already died, destroy it

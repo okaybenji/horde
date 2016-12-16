@@ -1,15 +1,11 @@
+const utils = require('../../utils');
+
 const behaviors = {
-  takeDamage: (entity, amount) => {
+  takeDamage(entity, amount) {
     entity.tint = 0xFF0000;
     entity.alpha = 0.75;
 
-    // TODO: cancel this timeout if entity takes more damage before it fires (debounce)
-    setTimeout(() => {
-      if (entity) {
-        entity.tint = 0xFFFFFF;
-        entity.alpha = 1;
-      }
-    }, 100);
+    entity.actions.removeTint();
 
     entity.hp -= amount;
 
@@ -18,6 +14,14 @@ const behaviors = {
       entity.actions.die();
     }
   },
+  removeTint(entity) {
+    return utils.debounce(() => {
+      if (entity) {
+        entity.tint = 0xFFFFFF;
+        entity.alpha = 1;
+      }
+    }, 100);
+  }
 };
 
 module.exports = behaviors;
