@@ -12,4 +12,6 @@
 
 * Upgrade player with a three-stage attack (if timed correctly): quick, quick, long. If second or third stage not activated in a timely fashion, player must wait normal fixed duration before attacking again. Long attack does more damage.
 
-* Figure out how to apply collision map to background art
+* Add collision to Bounds tilemap layer
+
+* Credit Buch for A Block Dungeon (http://opengameart.org/content/a-blocky-dungeon)
