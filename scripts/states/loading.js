@@ -12,7 +12,8 @@ const Loading = (game) => {
 
     preload() {
       // TODO: load all images automatically
-      game.load.image('arena', '../../assets/images/arena.png');
+      game.load.tilemap('dungeon', '../../assets/dungeon.json', null, Phaser.Tilemap.TILED_JSON);
+      game.load.image('dungeon', '../../assets/images/dungeon.png');
 
       spritesheets.forEach(({ name, image, frameCount }) => {
         const path = image.src;

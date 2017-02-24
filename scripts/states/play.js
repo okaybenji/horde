@@ -22,8 +22,13 @@ const Play = (game) => {
 
   const play = {
     create() {
-      const arena = game.add.sprite(0, 0, 'arena');
-      const bounds = {x: 0, y: 0, width: arena.width, height: arena.height};
+      const map = game.add.tilemap('dungeon');
+      map.addTilesetImage('dungeon', 'dungeon');
+      map.createLayer('Base');
+      map.createLayer('Bounds');
+      map.createLayer('Decorations');
+      map.createLayer('Foreground');
+      const bounds = {x: 0, y: 0, width: 512, height: 512};
       entities = game.add.group();
 
       player = factories.entities.player({
