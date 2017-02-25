@@ -1,5 +1,6 @@
 const Play = (game) => {
   let player;
+  let boundary;
   let entities;
   let bats = [];
   let rats = [];
@@ -25,9 +26,13 @@ const Play = (game) => {
       const map = game.add.tilemap('dungeon');
       map.addTilesetImage('dungeon', 'dungeon');
       map.createLayer('Base');
-      map.createLayer('Bounds');
+      boundary = map.createLayer('Bounds');
       map.createLayer('Decorations');
       map.createLayer('Foreground');
+
+      game.physics.startSystem(Phaser.Physics.ARCADE);
+      map.setCollisionBetween(1, 100000, true, 'Bounds');
+
       const bounds = {x: 0, y: 0, width: 512, height: 512};
       entities = game.add.group();
 
@@ -39,6 +44,7 @@ const Play = (game) => {
         enemies, //  for now, passing enemies to player to allow killing them... come up with better solution
         game // adding this back in for now. remove it when you figure out how to do the sword w/o it!
       });
+      game.physics.arcade.enable(player);
       entities.add(player);
 
       // camera lerp
@@ -73,6 +79,10 @@ const Play = (game) => {
     update() {
       // depth sort entities
       entities.sort('y', Phaser.Group.SORT_ASCENDING);
+      // collide entities
+      game.physics.arcade.collide(player, boundary, function() {
+        console.log('player:', player, 'collided with boundary:', boundary);
+      });
     }
   };
   
