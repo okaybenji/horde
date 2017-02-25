@@ -1,12 +1,11 @@
 const Play = (game) => {
+  const spritesheets = require('../../data/spritesheets');
+  const bats = [];
+  const rats = [];
+  const enemies = [];
   let player;
   let boundary;
   let entities;
-  let bats = [];
-  let rats = [];
-  let enemies = [];
-
-  const spritesheets = require('../../data/spritesheets');
 
   // TODO: search fs to build this object automatically
   const factories = {
@@ -19,7 +18,6 @@ const Play = (game) => {
     },
     keys: require('../factories/keys')
   };
-
 
   const play = {
     create() {
