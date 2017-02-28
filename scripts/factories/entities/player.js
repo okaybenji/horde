@@ -2,7 +2,7 @@ const spritesheets = require('../../../data/spritesheets');
 const behaviors = require('./behaviors');
 const utils = require('../../utils');
 
-const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir = 's', hp = 100 }) => {
+const playerFactory = ({ game, sprite, keys, gamepad, /*bounds, enemies = [],*/ dir = 's', hp = 100 }) => {
   let player = sprite;
 
   // used to allow sub-pixel movement without introducing sprite artifacts
@@ -50,17 +50,17 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
       // kill enemies that were struck
       game.stage.updateTransform(); // ensure slash bounds exist
 
-      const checkOverlap = (spriteA, spriteB) => {
-        const boundsA = spriteA.getBounds();
-        const boundsB = spriteB.getBounds();
+//      const checkOverlap = (spriteA, spriteB) => {
+//        const boundsA = spriteA.getBounds();
+//        const boundsB = spriteB.getBounds();
+//
+//        return Phaser.Rectangle.intersects(boundsA, boundsB);
+//      };
 
-        return Phaser.Rectangle.intersects(boundsA, boundsB);
-      };
-
-      const damage = 10;
-      enemies
-        .filter(enemy => checkOverlap(slash, enemy))
-        .forEach(hitEnemy => hitEnemy.actions.takeDamage(damage));
+//      const damage = 10;
+//      enemies
+//        .filter(enemy => checkOverlap(slash, enemy))
+//        .forEach(hitEnemy => hitEnemy.actions.takeDamage(damage));
     },
 
     endAttack: function endAttack() {
@@ -98,7 +98,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
           break;
       }
 
-      position = utils.keepInBounds(position, bounds);
+//      position = utils.keepInBounds(position, bounds);
       player.subX = position.x;
       player.subY = position.y;
 

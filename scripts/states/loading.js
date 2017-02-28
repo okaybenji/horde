@@ -17,8 +17,11 @@ const Loading = (game) => {
 
       spritesheets.forEach(({ name, image, frameCount }) => {
         const path = image.src;
+        // TODO: on first load, image.width and image.height each come through as 0
+        // specifying the width and height manually would solve this problem...
         const width = image.width / frameCount;
         const height = image.height;
+
         game.load.spritesheet(name, path, width, height);
       });
     },
