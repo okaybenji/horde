@@ -28,6 +28,7 @@ const Play = (game) => {
       boundary = map.createLayer('Bounds');
       map.createLayer('Floors');
       map.createLayer('WallsBg');
+      map.createLayer('DecorationsBg');
 
       map.setCollisionByExclusion([], true, boundary);
 
@@ -35,7 +36,7 @@ const Play = (game) => {
       entities = game.add.group();
 
       player = factories.entities.player({
-        sprite: game.add.sprite(25, 25),
+        sprite: game.add.sprite(44, 20),
         keys: factories.keys(game),
         gamepad: game.input.gamepad.pad1,
         enemies, //  for now, passing enemies to player to allow killing them... come up with better solution
@@ -46,7 +47,9 @@ const Play = (game) => {
 
       entities.add(player);
 
-      map.createLayer('WallsFg'); // add after player to depth sort above him/her
+      // add after player to depth sort above him/her
+      map.createLayer('WallsFg');
+      map.createLayer('DecorationsFg');
 
       // camera lerp
       game.world.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
