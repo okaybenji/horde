@@ -1,4 +1,6 @@
 const Play = (game) => {
+  window.game = game;
+
   const bats = [];
   const rats = [];
   const enemies = [];
@@ -25,10 +27,10 @@ const Play = (game) => {
       map.addTilesetImage('dungeon', 'dungeon');
 //      map.createLayer('Base');
       boundary = map.createLayer('Bounds');
+//      map.createLayer('VisBounds');
 //      map.createLayer('Decorations');
 //      map.createLayer('Foreground');
 
-      game.physics.startSystem(Phaser.Physics.ARCADE);
       map.setCollisionByExclusion([], true, boundary);
 
       const bounds = {x: 0, y: 0, width: 512, height: 512};
@@ -42,6 +44,7 @@ const Play = (game) => {
         game, // adding this back in for now. remove it when you figure out how to do the sword w/o it!
         boundary // for now, passing boundary to player so it can collide (doing this in state update does nothing)
       });
+      window.player = player;
 
       entities.add(player);
 

@@ -192,7 +192,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
     }
 
     game.physics.arcade.collide(player, boundary, () => {
-      console.log('colliding!'); // <- Never gets logged.
+      console.log('colliding!');
     });
   };
 
