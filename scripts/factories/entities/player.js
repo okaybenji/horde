@@ -5,8 +5,6 @@ const utils = require('../../utils');
 const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', hp = 100, boundary }) => {
   let player = sprite;
 
-  game.physics.arcade.enable(player);
-
   const actions = {
     removeTint: behaviors.removeTint(player),
     attack: function attack() {
@@ -120,6 +118,9 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
   };
 
   player.loadTexture('player_walk_' + dir);
+  game.physics.arcade.enable(player);
+  player.body.setSize(player.width, player.height);
+
   player.dir = dir;
   player.hp = hp;
 

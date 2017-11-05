@@ -35,7 +35,7 @@ const Play = (game) => {
       entities = game.add.group();
 
       player = factories.entities.player({
-        sprite: game.add.sprite(225, 225),
+        sprite: game.add.sprite(25, 25),
         keys: factories.keys(game),
         gamepad: game.input.gamepad.pad1,
         enemies, //  for now, passing enemies to player to allow killing them... come up with better solution
