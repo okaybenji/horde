@@ -25,11 +25,9 @@ const Play = (game) => {
     create() {
       const map = game.add.tilemap('dungeon');
       map.addTilesetImage('dungeon', 'dungeon');
-      map.createLayer('Base');
       boundary = map.createLayer('Bounds');
-      map.createLayer('VisBounds');
-      map.createLayer('Decorations');
-      map.createLayer('Foreground');
+      map.createLayer('Floors');
+      map.createLayer('Walls');
 
       map.setCollisionByExclusion([], true, boundary);
 
@@ -37,7 +35,7 @@ const Play = (game) => {
       entities = game.add.group();
 
       player = factories.entities.player({
-        sprite: game.add.sprite(250, 250),
+        sprite: game.add.sprite(225, 225),
         keys: factories.keys(game),
         gamepad: game.input.gamepad.pad1,
         enemies, //  for now, passing enemies to player to allow killing them... come up with better solution
