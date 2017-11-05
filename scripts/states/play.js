@@ -27,7 +27,7 @@ const Play = (game) => {
       map.addTilesetImage('dungeon', 'dungeon');
       boundary = map.createLayer('Bounds');
       map.createLayer('Floors');
-      map.createLayer('Walls');
+      map.createLayer('WallsBg');
 
       map.setCollisionByExclusion([], true, boundary);
 
@@ -46,7 +46,7 @@ const Play = (game) => {
 
       entities.add(player);
 
-      cursors = game.input.keyboard.createCursorKeys();
+      map.createLayer('WallsFg'); // add after player to depth sort above him/her
 
       // camera lerp
       game.world.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
