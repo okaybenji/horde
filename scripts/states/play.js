@@ -25,11 +25,11 @@ const Play = (game) => {
     create() {
       const map = game.add.tilemap('dungeon');
       map.addTilesetImage('dungeon', 'dungeon');
-//      map.createLayer('Base');
+      map.createLayer('Base');
       boundary = map.createLayer('Bounds');
-//      map.createLayer('VisBounds');
-//      map.createLayer('Decorations');
-//      map.createLayer('Foreground');
+      map.createLayer('VisBounds');
+      map.createLayer('Decorations');
+      map.createLayer('Foreground');
 
       map.setCollisionByExclusion([], true, boundary);
 
