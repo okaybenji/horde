@@ -23,12 +23,12 @@ const Play = (game) => {
 
   const play = {
     create() {
-      const map = game.add.tilemap('dungeon');
-      map.addTilesetImage('dungeon', 'dungeon');
+      const map = game.add.tilemap('zelda-dungeon');
+      map.addTilesetImage('Zelda Dungeon', 'zelda-dungeon');
       boundary = map.createLayer('Bounds');
-      map.createLayer('Floors');
-      map.createLayer('WallsBg');
-      map.createLayer('DecorationsBg');
+      map.createLayer('Base');
+      map.createLayer('Blocks');
+      map.createLayer('Doors');
 
       map.setCollisionByExclusion([], true, boundary);
 
@@ -47,9 +47,9 @@ const Play = (game) => {
 
       entities.add(player);
 
-      // add after player to depth sort above him/her
-      map.createLayer('WallsFg');
-      map.createLayer('DecorationsFg');
+      // Add after player to sort over
+      map.createLayer('Walls');
+      map.createLayer('Doorframes');
 
       // camera lerp
       game.world.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);

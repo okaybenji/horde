@@ -12,8 +12,8 @@ const Loading = (game) => {
 
     preload() {
       // TODO: load all images automatically
-      game.load.tilemap('dungeon', '../../assets/dungeon.json', null, Phaser.Tilemap.TILED_JSON);
-      game.load.image('dungeon', '../../assets/images/dungeon.png');
+      game.load.tilemap('zelda-dungeon', '../../assets/zelda-dungeon.json', null, Phaser.Tilemap.TILED_JSON);
+      game.load.image('zelda-dungeon', '../../assets/images/zelda-dungeon.png');
 
       spritesheets.forEach(({ name, image, frameCount }) => {
         const path = image.src;
@@ -33,7 +33,7 @@ const Loading = (game) => {
       game.state.start('splash');
     }
   };
-  
+
   return loading;
 };
 
