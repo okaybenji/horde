@@ -119,7 +119,8 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
 
   player.loadTexture('player_walk_' + dir);
   game.physics.arcade.enable(player);
-  player.body.setSize(player.width, player.height);
+  player.body.setCircle(player.width / 2);
+  player.body.offset.y = 4;
 
   player.dir = dir;
   player.hp = hp;
