@@ -118,9 +118,10 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
   };
 
   player.loadTexture('player_walk_' + dir);
-  game.physics.arcade.enable(player);
+  game.physics.p2.enable(player, true);
   player.body.setCircle(player.width / 2);
   player.body.offset.y = 4;
+  player.body.fixedRotation = true;
 
   player.dir = dir;
   player.hp = hp;
@@ -192,10 +193,6 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
     if (input.attack) {
       actions.attack();
     }
-
-    // game.physics.arcade.collide(player, boundary, () => {
-    //   console.log('colliding!');
-    // });
   };
 
   player.actions = actions;

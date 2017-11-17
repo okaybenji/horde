@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="416" tileheight="472" nextobjectid="4">
+ <tileset firstgid="1" name="arena" tilewidth="416" tileheight="472" tilecount="1" columns="1">
+  <image source="images/background.png" width="416" height="472"/>
+ </tileset>
+ <layer name="Background" width="1" height="1">
+  <data encoding="csv">
+1
+</data>
+ </layer>
+ <objectgroup name="Bounds" offsetx="-9" offsety="19">
+  <object id="1" x="51" y="125" width="331" height="305" visible="0">
+   <ellipse/>
+  </object>
+  <object id="3" x="184" y="130">
+   <polyline points="-3.74566,-149.295 -173.04,-147.742 -172.937,320.897 239.549,322.136 239.959,-148.079 -1.48273,-149.666 -1.08814,3.79051 64.7894,2.52701 66,9 93,10 114,13 132,23 140,27 146,26 157,32 158,41 170.962,52.4077 178.738,63.5539 187,78 193,94 197,117 198,139 199,158 194,194 159.439,266.038 120.7,290.485 65,309.331 0.330806,308.146 -64,290 -96,258 -120,205 -132,165 -135,133 -132,103 -121,74 -103,49 -90,36 -90,31 -74,20 -73,26 -50,15 -30,7 -2,8 -2.94888,-149.531"/>
+  </object>
+ </objectgroup>
+</map>

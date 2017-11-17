@@ -23,8 +23,18 @@ const Play = (game) => {
 
   const play = {
     create() {
-      const arena = game.add.sprite(0, 0, 'arena');
-      const bounds = {x: 0, y: 0, width: arena.width, height: arena.height};
+      game.physics.startSystem(Phaser.Physics.P2JS);
+      game.physics.p2.gravity.x = 0;
+      game.physics.p2.gravity.y = 0;
+      game.physics.p2.relaxation = 20;
+      game.physics.p2.stiffness = 1000000;
+
+      const arena = game.add.tilemap('arena');
+      arena.addTilesetImage('arena', 'background');
+      arena.createLayer('Background');
+      game.physics.p2.convertCollisionObjects(arena, 'Bounds');
+
+      // const bounds = {x: 0, y: 0, width: arena.width, height: arena.height};
       // const map = game.add.tilemap('zelda-dungeon');
       // map.addTilesetImage('Zelda Dungeon', 'zelda-dungeon');
       // boundary = map.createLayer('Bounds');
@@ -34,7 +44,7 @@ const Play = (game) => {
 
       // map.setCollisionByExclusion([], true, boundary);
 
-      // const bounds = {x: 0, y: 0, width: 512, height: 512};
+      const bounds = {x: 0, y: 0, width: 512, height: 512};
       entities = game.add.group();
 
       player = factories.entities.player({
@@ -43,7 +53,6 @@ const Play = (game) => {
         gamepad: game.input.gamepad.pad1,
         enemies, //  for now, passing enemies to player to allow killing them... come up with better solution
         game, // adding this back in for now. remove it when you figure out how to do the sword w/o it!
-        // boundary // for now, passing boundary to player so it can collide (doing this in state update does nothing)
       });
       window.player = player;
 
