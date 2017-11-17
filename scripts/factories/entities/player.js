@@ -2,12 +2,8 @@ const spritesheets = require('../../../data/spritesheets');
 const behaviors = require('./behaviors');
 const utils = require('../../utils');
 
-const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir = 's', hp = 100 }) => {
+const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', hp = 100, boundary }) => {
   let player = sprite;
-
-  // used to allow sub-pixel movement without introducing sprite artifacts
-  player.subX = player.x;
-  player.subY = player.y;
 
   const actions = {
     removeTint: behaviors.removeTint(player),
@@ -73,34 +69,26 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
         return;
       }
 
-      // TODO: sub-pixel movement is not as smooth
-      // a speed of e.g. 2 looks/feels smoother
-      // can anything be done about this?
       const speed = 1.5;
       const fps = 12;
       const shouldLoop = false;
-      let position = {x: player.subX, y: player.subY, width: player.width, height: player.height};
 
       player.dir = direction;
 
       switch (direction) {
         case 'w':
-          position.x -= speed;
+          player.body.x -= speed;
           break;
         case 'e':
-          position.x += speed;
+          player.body.x += speed;
           break;
         case 'n':
-          position.y -= speed;
+          player.body.y -= speed;
           break;
         case 's':
-          position.y += speed;
+          player.body.y += speed;
           break;
       }
-
-      position = utils.keepInBounds(position, bounds);
-      player.subX = position.x;
-      player.subY = position.y;
 
       if (!player.animations.currentAnim.isPlaying) {
         player.loadTexture('player_walk_' + player.dir);
@@ -130,6 +118,10 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
   };
 
   player.loadTexture('player_walk_' + dir);
+  game.physics.arcade.enable(player);
+  player.body.setCircle(player.width / 2);
+  player.body.offset.y = 4;
+
   player.dir = dir;
   player.hp = hp;
 
@@ -201,8 +193,9 @@ const playerFactory = ({ game, sprite, keys, gamepad, bounds, enemies = [], dir 
       actions.attack();
     }
 
-    player.x = Math.round(player.subX);
-    player.y = Math.round(player.subY);
+    game.physics.arcade.collide(player, boundary, () => {
+      console.log('colliding!');
+    });
   };
 
   player.actions = actions;

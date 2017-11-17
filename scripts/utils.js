@@ -22,21 +22,6 @@ const utils = {
       }
     };
   },
-  keepInBounds(entity, bounds) {
-    if (entity.x < bounds.x) {
-      entity.x = bounds.x;
-    } else if (entity.x + entity.width > bounds.x + bounds.width) {
-      entity.x = bounds.x + bounds.width - entity.width;
-    }
-
-    if (entity.y < bounds.y) {
-      entity.y = bounds.y;
-    } else if (entity.y + entity.height > bounds.y + bounds.height) {
-      entity.y = bounds.y + bounds.height - entity.height;
-    }
-
-    return entity;
-  },
 
   targetIsInRange(entity, target, range) {
     return entity.x > target.x - range &&

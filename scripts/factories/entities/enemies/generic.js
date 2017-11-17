@@ -2,7 +2,7 @@ const spritesheets = require('../../../../data/spritesheets');
 const behaviors = require('../behaviors');
 const utils = require('../../../utils');
 
-const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 18, range = 20, hp = 20, atk = 5}) => {
+const enemyFactory = ({name, sprite, target, neighbors, movement, fps = 18, range = 20, hp = 20, atk = 0}) => {
   let enemy = sprite;
   const shouldLoop = true;
 
@@ -90,8 +90,6 @@ const enemyFactory = ({name, sprite, bounds, target, neighbors, movement, fps = 
 
     enemy.x += vector.x;
     enemy.y += vector.y;
-
-    enemy = utils.keepInBounds(enemy, bounds);
   };
 
   return enemy;

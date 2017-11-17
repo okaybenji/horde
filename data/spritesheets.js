@@ -45,11 +45,12 @@ const spritesheets = [
   const entity = asset.slice(0, slash);
   const name = entity + '_' + asset.slice(slash + 1, dash);
   const frameCount = Number(asset.slice(dash + 1, dot));
-  const src = '../../assets/images/' + asset;
+  const path = '../../assets/images/' + asset;
+
   // TODO: apparently watchify doesn't like (()=>())
   const image = (function() {
     const image = new Image();
-    image.src = src;
+    image.src = path;
     return image;
   }());
 

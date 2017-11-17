@@ -1,11 +1,13 @@
 const Play = (game) => {
-  let player;
-  let entities;
-  let bats = [];
-  let rats = [];
-  let enemies = [];
+  window.game = game;
 
-  const spritesheets = require('../../data/spritesheets');
+  const bats = [];
+  const rats = [];
+  const enemies = [];
+  let player;
+  let boundary;
+  let entities;
+  let cursors;
 
   // TODO: search fs to build this object automatically
   const factories = {
@@ -19,22 +21,35 @@ const Play = (game) => {
     keys: require('../factories/keys')
   };
 
-
   const play = {
     create() {
-      const arena = game.add.sprite(0, 0, 'arena');
-      const bounds = {x: 0, y: 0, width: arena.width, height: arena.height};
+      const map = game.add.tilemap('zelda-dungeon');
+      map.addTilesetImage('Zelda Dungeon', 'zelda-dungeon');
+      boundary = map.createLayer('Bounds');
+      map.createLayer('Base');
+      map.createLayer('Blocks');
+      map.createLayer('Doors');
+
+      map.setCollisionByExclusion([], true, boundary);
+
+      const bounds = {x: 0, y: 0, width: 512, height: 512};
       entities = game.add.group();
 
       player = factories.entities.player({
-        sprite: game.add.sprite(200, 228),
+        sprite: game.add.sprite(44, 20),
         keys: factories.keys(game),
         gamepad: game.input.gamepad.pad1,
-        bounds,
         enemies, //  for now, passing enemies to player to allow killing them... come up with better solution
-        game // adding this back in for now. remove it when you figure out how to do the sword w/o it!
+        game, // adding this back in for now. remove it when you figure out how to do the sword w/o it!
+        boundary // for now, passing boundary to player so it can collide (doing this in state update does nothing)
       });
+      window.player = player;
+
       entities.add(player);
+
+      // Add after player to sort over
+      map.createLayer('Walls');
+      map.createLayer('Doorframes');
 
       // camera lerp
       game.world.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -45,7 +60,7 @@ const Play = (game) => {
 
       [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
         .map(pos => game.add.sprite(pos.x, pos.y))
-        .map(sprite => ({sprite, target: player, neighbors: bats, bounds}))
+        .map(sprite => ({sprite, target: player, neighbors: bats}))
         .map(cfg => factories.entities.enemies.bat(cfg))
         .forEach(bat => {
           bats.push(bat);
@@ -55,7 +70,7 @@ const Play = (game) => {
 
       [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
         .map(pos => game.add.sprite(pos.x, pos.y))
-        .map(sprite => ({sprite, target: player, neighbors: rats, bounds}))
+        .map(sprite => ({sprite, target: player, neighbors: rats}))
         .map(cfg => factories.entities.enemies.rat(cfg))
         .forEach(rat => {
           rats.push(rat);
@@ -70,7 +85,7 @@ const Play = (game) => {
       entities.sort('y', Phaser.Group.SORT_ASCENDING);
     }
   };
-  
+
   return play;
 };
 

@@ -12,12 +12,16 @@ const Loading = (game) => {
 
     preload() {
       // TODO: load all images automatically
-      game.load.image('arena', '../../assets/images/arena.png');
+      game.load.tilemap('zelda-dungeon', '../../assets/zelda-dungeon.json', null, Phaser.Tilemap.TILED_JSON);
+      game.load.image('zelda-dungeon', '../../assets/images/zelda-dungeon.png');
 
       spritesheets.forEach(({ name, image, frameCount }) => {
         const path = image.src;
+        // TODO: on first load, image.width and image.height each come through as 0
+        // specifying the width and height manually would solve this problem...
         const width = image.width / frameCount;
         const height = image.height;
+
         game.load.spritesheet(name, path, width, height);
       });
     },
@@ -29,7 +33,7 @@ const Loading = (game) => {
       game.state.start('splash');
     }
   };
-  
+
   return loading;
 };
 
