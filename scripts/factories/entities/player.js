@@ -2,7 +2,7 @@ const spritesheets = require('../../../data/spritesheets');
 const behaviors = require('./behaviors');
 const utils = require('../../utils');
 
-const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', hp = 100, boundary }) => {
+const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', hp = 100, /*boundary*/ }) => {
   let player = sprite;
 
   const actions = {
@@ -193,9 +193,9 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
       actions.attack();
     }
 
-    game.physics.arcade.collide(player, boundary, () => {
-      console.log('colliding!');
-    });
+    // game.physics.arcade.collide(player, boundary, () => {
+    //   console.log('colliding!');
+    // });
   };
 
   player.actions = actions;

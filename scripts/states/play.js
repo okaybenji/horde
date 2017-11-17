@@ -23,33 +23,35 @@ const Play = (game) => {
 
   const play = {
     create() {
-      const map = game.add.tilemap('zelda-dungeon');
-      map.addTilesetImage('Zelda Dungeon', 'zelda-dungeon');
-      boundary = map.createLayer('Bounds');
-      map.createLayer('Base');
-      map.createLayer('Blocks');
-      map.createLayer('Doors');
+      const arena = game.add.sprite(0, 0, 'arena');
+      const bounds = {x: 0, y: 0, width: arena.width, height: arena.height};
+      // const map = game.add.tilemap('zelda-dungeon');
+      // map.addTilesetImage('Zelda Dungeon', 'zelda-dungeon');
+      // boundary = map.createLayer('Bounds');
+      // map.createLayer('Base');
+      // map.createLayer('Blocks');
+      // map.createLayer('Doors');
 
-      map.setCollisionByExclusion([], true, boundary);
+      // map.setCollisionByExclusion([], true, boundary);
 
-      const bounds = {x: 0, y: 0, width: 512, height: 512};
+      // const bounds = {x: 0, y: 0, width: 512, height: 512};
       entities = game.add.group();
 
       player = factories.entities.player({
-        sprite: game.add.sprite(44, 20),
+        sprite: game.add.sprite(200, 228),
         keys: factories.keys(game),
         gamepad: game.input.gamepad.pad1,
         enemies, //  for now, passing enemies to player to allow killing them... come up with better solution
         game, // adding this back in for now. remove it when you figure out how to do the sword w/o it!
-        boundary // for now, passing boundary to player so it can collide (doing this in state update does nothing)
+        // boundary // for now, passing boundary to player so it can collide (doing this in state update does nothing)
       });
       window.player = player;
 
       entities.add(player);
 
       // Add after player to sort over
-      map.createLayer('Walls');
-      map.createLayer('Doorframes');
+      // map.createLayer('Walls');
+      // map.createLayer('Doorframes');
 
       // camera lerp
       game.world.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
