@@ -46,7 +46,7 @@ const Splash = (game) => {
       }
 
       // for now, bypass splash screen...
-      game.state.start('play'); // TODO: REMOVE ME!
+      // game.state.start('play'); // TODO: REMOVE ME!
     }
   };
 
