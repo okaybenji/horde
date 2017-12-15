@@ -22,6 +22,7 @@ const batFactory = ({sprite, target, neighbors, enemies}) => {
     neighbors,
     enemies,
     movement,
+    atk: 2,
     fps: 30
   });
 

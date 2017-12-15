@@ -1,6 +1,7 @@
 const spritesheets = require('../../../data/spritesheets');
 const behaviors = require('./behaviors');
 const utils = require('../../utils');
+const HealthBar = require('../../../vendor/HealthBar.js');
 
 const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', hp = 100, boundary }) => {
   let player = sprite;
@@ -106,6 +107,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
 
     takeDamage(amount) {
       behaviors.takeDamage(player, amount);
+      player.healthBar.setPercent(player.hp / hp * 100);
     },
 
     die: function() {
@@ -124,6 +126,20 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
 
   player.dir = dir;
   player.hp = hp;
+
+  player.healthBar = new HealthBar(game, {
+    width: 50,
+    height: 10,
+    x: 40,
+    y: 20,
+    bg: {
+      color: '#651828',
+    },
+    bar: {
+      color: '#03ff33',
+    },
+    animationDuration: 200,
+  });
 
   spritesheets
     .filter(spritesheet => spritesheet.entity === 'player')
