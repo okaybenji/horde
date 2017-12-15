@@ -98,7 +98,13 @@ const enemyFactory = ({name, sprite, target, neighbors, enemies, movement, fps =
     // remove enemy from enemies since player can't hit it any longer
     const i = enemies.indexOf(enemy);
     enemies.splice(i, 1);
+
+    // 1 in 5 enemies will drop a heart when their corpse is destroyed
+    if (Math.random() < 0.2) {
+      // TODO: Drop a heart!
+    }
   };
+  enemy.events.onKilled.add(enemy.onKilled, enemy);
 
   return enemy;
 };
