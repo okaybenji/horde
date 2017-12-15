@@ -1,14 +1,16 @@
 const spritesheets = require('../../../../data/spritesheets');
 const behaviors = require('../behaviors');
 const utils = require('../../../utils');
+const heartFactory = require('../heart')
 
-const enemyFactory = ({name, sprite, target, neighbors, enemies, movement, fps = 18, range = 20, hp = 20, atk = 0}) => {
+const enemyFactory = ({game, name, sprite, target, neighbors, enemies, movement, fps = 18, range = 20, hp = 20, atk = 0}) => {
   let enemy = sprite;
   const shouldLoop = true;
 
   enemy.loadTexture(name + '_move_e');
   enemy.dir = 'e';
   enemy.hp = hp;
+  enemy.maxHp = hp;
   enemy.lastAttacked = 0;
 
   spritesheets
@@ -101,7 +103,9 @@ const enemyFactory = ({name, sprite, target, neighbors, enemies, movement, fps =
 
     // 1 in 5 enemies will drop a heart when their corpse is destroyed
     if (Math.random() < 0.2) {
-      // TODO: Drop a heart!
+      const heart = game.add.sprite(enemy.x, enemy.y);
+      const cfg = {sprite: heart, player};
+      heartFactory(cfg);
     }
   };
   enemy.events.onKilled.add(enemy.onKilled, enemy);

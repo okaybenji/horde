@@ -1,6 +1,6 @@
 const enemyFactory = require('./generic');
 
-const ratFactory = ({sprite, target, neighbors, enemies}) => {
+const ratFactory = ({game, sprite, target, neighbors, enemies}) => {
   const movement = () => {
     const velocity = 1;
     const ratPos = new DE.Math.Vector(sprite.x, sprite.y);
@@ -16,6 +16,7 @@ const ratFactory = ({sprite, target, neighbors, enemies}) => {
   };
 
   const rat = enemyFactory({
+    game,
     name: 'rat',
     sprite,
     target,

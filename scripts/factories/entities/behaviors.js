@@ -14,6 +14,16 @@ const behaviors = {
       entity.actions.die();
     }
   },
+  heal(entity, amount) {
+    entity.tint = 0x00FF00;
+    entity.actions.removeTint();
+
+    entity.hp += amount;
+
+    if (entity.hp > entity.maxHp) {
+      entity.hp = entity.maxHp;
+    }
+  },
   removeTint(entity) {
     return utils.debounce(() => {
       if (entity) {

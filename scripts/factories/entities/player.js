@@ -110,6 +110,12 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
       player.healthBar.setPercent(player.hp / hp * 100);
     },
 
+    heal(amount) {
+      console.log('healing player by amount:', amount);
+      behaviors.heal(player, amount);
+      player.healthBar.setPercent(player.hp / hp * 100);
+    },
+
     die: function() {
       player.isDead = true;
       player.angle = 45;
@@ -126,6 +132,7 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
 
   player.dir = dir;
   player.hp = hp;
+  player.maxHp = hp;
 
   player.healthBar = new HealthBar(game, {
     width: 50,
