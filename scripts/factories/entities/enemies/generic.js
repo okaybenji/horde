@@ -2,7 +2,7 @@ const spritesheets = require('../../../../data/spritesheets');
 const behaviors = require('../behaviors');
 const utils = require('../../../utils');
 
-const enemyFactory = ({name, sprite, target, neighbors, movement, fps = 18, range = 20, hp = 20, atk = 0}) => {
+const enemyFactory = ({name, sprite, target, neighbors, enemies, movement, fps = 18, range = 20, hp = 20, atk = 0}) => {
   let enemy = sprite;
   const shouldLoop = true;
 
@@ -28,7 +28,7 @@ const enemyFactory = ({name, sprite, target, neighbors, movement, fps = 18, rang
         return;
       }
 
-      // remove enemy from list
+      // remove enemy from neighbors so we don't have to recheck that they're dead every frame
       // (note that doing this here will prevent enemies from avoiding dead buddies)
       const i = neighbors.indexOf(enemy);
       neighbors.splice(i, 1);
@@ -92,6 +92,12 @@ const enemyFactory = ({name, sprite, target, neighbors, movement, fps = 18, rang
 
     enemy.x += vector.x;
     enemy.y += vector.y;
+  };
+
+  enemy.onKilled = () => {
+    // remove enemy from enemies since player can't hit it any longer
+    const i = enemies.indexOf(enemy);
+    enemies.splice(i, 1);
   };
 
   return enemy;

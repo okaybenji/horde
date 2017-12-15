@@ -1,6 +1,6 @@
 const enemyFactory = require('./generic');
 
-const batFactory = ({sprite, target, neighbors}) => {
+const batFactory = ({sprite, target, neighbors, enemies}) => {
   const movement = () => {
     const velocity = 1;
     const batPos = new DE.Math.Vector(sprite.x, sprite.y);
@@ -20,6 +20,7 @@ const batFactory = ({sprite, target, neighbors}) => {
     sprite,
     target,
     neighbors,
+    enemies,
     movement,
     fps: 30
   });
