@@ -25,11 +25,13 @@ const enemyFactory = ({name, sprite, target, neighbors, movement, fps = 18, rang
     die() {
       if (enemy.isDead) {
         enemy.kill(); // if the enemy already died, destroy it
-        // remove enemy from list
-        const i = neighbors.indexOf(enemy);
-        neighbors.splice(i, 1);
         return;
       }
+
+      // remove enemy from list
+      // (note that doing this here will prevent enemies from avoiding dead buddies)
+      const i = neighbors.indexOf(enemy);
+      neighbors.splice(i, 1);
 
       // otherwise, kill it and leave a corpse
       const deathAnimation = name + '_die_' + enemy.dir;

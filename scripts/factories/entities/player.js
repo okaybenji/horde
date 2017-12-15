@@ -193,9 +193,9 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
       actions.attack();
     }
 
-    game.physics.arcade.collide(player, boundary, () => {
-      console.log('colliding!');
-    });
+    // game.physics.arcade.collide(player, boundary, () => {
+    //  console.log('colliding!');
+    // });
   };
 
   player.actions = actions;

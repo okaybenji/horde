@@ -1,3 +1,5 @@
+const utils = require('../utils');
+
 const Play = (game) => {
   window.game = game;
 
@@ -8,6 +10,7 @@ const Play = (game) => {
   let boundary;
   let entities;
   let cursors;
+  let enemyCount = 0;
 
   // TODO: search fs to build this object automatically
   const factories = {
@@ -58,31 +61,45 @@ const Play = (game) => {
       game.camera.y = player.y - game.height / 2;
       game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.02, 0.02);
 
+      // add rats
       [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
-        .map(pos => game.add.sprite(pos.x, pos.y))
-        .map(sprite => ({sprite, target: player, neighbors: bats}))
-        .map(cfg => factories.entities.enemies.bat(cfg))
-        .forEach(bat => {
-          bats.push(bat);
-          enemies.push(bat);
-          entities.add(bat);
-        });
+        .map(pos => {
+          const sprite = game.add.sprite(pos.x, pos.y);
+          const cfg = {sprite, target: player, neighbors: rats};
+          const rat = factories.entities.enemies.rat(cfg);
 
-      [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
-        .map(pos => game.add.sprite(pos.x, pos.y))
-        .map(sprite => ({sprite, target: player, neighbors: rats}))
-        .map(cfg => factories.entities.enemies.rat(cfg))
+          return rat;
+        })
         .forEach(rat => {
           rats.push(rat);
           enemies.push(rat);
           entities.add(rat);
         });
-
     },
 
     update() {
       // depth sort entities
       entities.sort('y', Phaser.Group.SORT_ASCENDING);
+
+      // if all the bats are dead, spawn more! 2 add'l enemies each wave, for now
+      if (bats.every(b => b.isDead)) {
+        enemyCount += 2;
+        utils.createArray(enemyCount)
+          .map(e => {
+            const pos = {x: utils.randomIntBetween(48, 358), y: utils.randomIntBetween(146, 326)};
+
+            const sprite = game.add.sprite(pos.x, pos.y);
+            const cfg = {sprite, target: player, neighbors: bats};
+            const bat = factories.entities.enemies.bat(cfg);
+
+            return bat;
+          })
+          .forEach(bat => {
+            bats.push(bat);
+            enemies.push(bat);
+            entities.add(bat);
+          });
+      }
     }
   };
 

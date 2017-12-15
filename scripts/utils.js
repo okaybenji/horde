@@ -1,9 +1,9 @@
 const utils = {
-  resize: (game) => {
+  resize(game) {
     document.body.style.zoom = window.innerWidth / game.width;
   },
   // adapted from underscore
-  debounce: (func, wait, immediate) => {
+  debounce(func, wait, immediate) {
     let timeout;
     return function() {
       const context = this;
@@ -29,6 +29,9 @@ const utils = {
            entity.y > target.y - range &&
            entity.y < target.y + range;
   },
+
+  createArray: length => new Array(length).fill(0),
+  randomIntBetween: (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min,
 };
 
 module.exports = utils;
