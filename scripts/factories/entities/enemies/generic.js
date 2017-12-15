@@ -40,6 +40,9 @@ const enemyFactory = ({game, name, sprite, target, neighbors, enemies, movement,
       enemy.loadTexture(deathAnimation);
       enemy.animations.play(deathAnimation, fps);
       enemy.isDead = true;
+
+      game.score++;
+      game.scoreText.text = `Score: ${game.score}`;
     },
     attack() {
       const damage = atk;

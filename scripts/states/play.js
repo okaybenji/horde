@@ -75,6 +75,9 @@ const Play = (game) => {
           enemies.push(rat);
           entities.add(rat);
         });
+
+      game.score = 0;
+      game.scoreText = game.add.text(180, 12, `Score: 0`, { fontSize: '12px', fill: '#fff' });
     },
 
     update() {

@@ -9,7 +9,6 @@ const heartFactory = ({ sprite, player }) => {
 
   heart.update = function() {
     game.physics.arcade.collide(player, heart, () => {
-      console.log('healing player & killing heart');
       player.actions.heal(30);
       heart.kill();
     });

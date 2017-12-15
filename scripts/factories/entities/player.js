@@ -111,7 +111,6 @@ const playerFactory = ({ game, sprite, keys, gamepad, enemies = [], dir = 's', h
     },
 
     heal(amount) {
-      console.log('healing player by amount:', amount);
       behaviors.heal(player, amount);
       player.healthBar.setPercent(player.hp / hp * 100);
     },
