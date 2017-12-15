@@ -65,7 +65,7 @@ const Play = (game) => {
       [{x: 48, y: 146}, {x: 368, y: 146}, {y: 326}, {x: 368, y: 326}]
         .map(pos => {
           const sprite = game.add.sprite(pos.x, pos.y);
-          const cfg = {sprite, target: player, neighbors: rats, enemies, entities};
+          const cfg = {sprite, target: player, neighbors: rats, enemies};
           const rat = factories.entities.enemies.rat(cfg);
 
           return rat;
@@ -89,7 +89,7 @@ const Play = (game) => {
             const pos = {x: utils.randomIntBetween(48, 358), y: utils.randomIntBetween(146, 326)};
 
             const sprite = game.add.sprite(pos.x, pos.y);
-            const cfg = {sprite, target: player, neighbors: bats, enemies, entities};
+            const cfg = {sprite, target: player, neighbors: bats, enemies};
             const bat = factories.entities.enemies.bat(cfg);
 
             return bat;
